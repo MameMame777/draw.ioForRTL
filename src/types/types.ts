@@ -108,8 +108,20 @@ export interface TruthTable {
 }
 
 export interface TruthTableRow {
-    inputs: boolean[];
-    outputs: boolean[];
+    inputs: (boolean | null)[];
+    outputs: (boolean | null)[];
+}
+
+/** Raw table imported from CSV/Markdown — values kept as strings */
+export interface RawTable {
+    inputs: string[];
+    outputs: string[];
+    rows: RawTableRow[];
+}
+
+export interface RawTableRow {
+    inputs: string[];
+    outputs: string[];
 }
 
 /** Template metadata */

@@ -1,11 +1,11 @@
-import type { TruthTable } from '../types/types';
+import type { TruthTable, RawTable } from '../types/types';
 
 /**
- * TruthTableRenderer — converts a TruthTable to draw.io mxGraph XML.
- * 
+ * TruthTableRenderer — converts a TruthTable or RawTable to draw.io mxGraph XML.
+ *
  * Generates a table shape with:
  * - Header row: input names (blue) + output names (green)
- * - Data rows: 0/1 values with alternating background
+ * - Data rows: values with alternating background
  */
 export class TruthTableRenderer {
     private static readonly INPUT_HEADER_STYLE =
@@ -21,15 +21,30 @@ export class TruthTableRenderer {
     private static readonly HEADER_HEIGHT = 32;
 
     /**
-     * Render a truth table as draw.io mxGraphModel XML for insertion via merge action.
+     * Render a TruthTable (boolean-based, from expressions) as draw.io XML.
      */
     public renderToDrawioXml(table: TruthTable): string {
+        // Convert boolean TruthTable to string-based RawTable
+        const raw: RawTable = {
+            inputs: table.inputs,
+            outputs: table.outputs,
+            rows: table.rows.map(row => ({
+                inputs: row.inputs.map(v => v === null ? 'x' : v ? '1' : '0'),
+                outputs: row.outputs.map(v => v === null ? 'x' : v ? '1' : '0'),
+            })),
+        };
+        return this.renderRawToDrawioXml(raw);
+    }
+
+    /**
+     * Render a RawTable (string-based, from CSV/Markdown) as draw.io XML.
+     */
+    public renderRawToDrawioXml(table: RawTable): string {
         const totalCols = table.inputs.length + table.outputs.length;
-        const totalRows = table.rows.length + 1; // +1 for header
         const width = totalCols * TruthTableRenderer.CELL_WIDTH;
         const height = TruthTableRenderer.HEADER_HEIGHT + table.rows.length * TruthTableRenderer.CELL_HEIGHT;
 
-        let cellId = 100; // Start at high ID to avoid conflicts
+        let cellId = 100;
         const cells: string[] = [];
 
         // Parent group cell
@@ -41,9 +56,9 @@ export class TruthTableRenderer {
             `</mxCell>`
         );
 
-        // Title row (optional)
+        // Title row
         const titleId = cellId++;
-        const titleText = this.buildTitleText(table);
+        const titleText = `Truth Table (${table.inputs.join(', ')} → ${table.outputs.join(', ')})`;
         cells.push(
             `<mxCell id="${titleId}" value="${this.escapeXml(titleText)}" ` +
             `style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;` +
@@ -93,12 +108,11 @@ export class TruthTableRenderer {
                 : TruthTableRenderer.CELL_STYLE_ODD;
 
             col = 0;
-            // Input values
             for (const val of row.inputs) {
                 const id = cellId++;
                 const x = col * TruthTableRenderer.CELL_WIDTH;
                 cells.push(
-                    `<mxCell id="${id}" value="${val ? '1' : '0'}" ` +
+                    `<mxCell id="${id}" value="${this.escapeXml(val)}" ` +
                     `style="${style}rounded=0;strokeColor=#cccccc;" ` +
                     `vertex="1" parent="${groupId}">` +
                     `<mxGeometry x="${x}" y="${y}" ` +
@@ -108,16 +122,12 @@ export class TruthTableRenderer {
                 );
                 col++;
             }
-            // Output values
             for (const val of row.outputs) {
                 const id = cellId++;
                 const x = col * TruthTableRenderer.CELL_WIDTH;
-                const highlightStyle = val
-                    ? style + 'fontColor=#2d5a27;fontStyle=1;'
-                    : style;
                 cells.push(
-                    `<mxCell id="${id}" value="${val ? '1' : '0'}" ` +
-                    `style="${highlightStyle}rounded=0;strokeColor=#cccccc;" ` +
+                    `<mxCell id="${id}" value="${this.escapeXml(val)}" ` +
+                    `style="${style}rounded=0;strokeColor=#cccccc;" ` +
                     `vertex="1" parent="${groupId}">` +
                     `<mxGeometry x="${x}" y="${y}" ` +
                     `width="${TruthTableRenderer.CELL_WIDTH}" height="${TruthTableRenderer.CELL_HEIGHT}" ` +
@@ -133,10 +143,6 @@ export class TruthTableRenderer {
             '<mxCell id="1" parent="0"/>' +
             cells.join('\n') +
             '</root></mxGraphModel>';
-    }
-
-    private buildTitleText(table: TruthTable): string {
-        return `Truth Table (${table.inputs.join(', ')} → ${table.outputs.join(', ')})`;
     }
 
     private escapeXml(str: string): string {

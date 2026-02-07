@@ -7,6 +7,8 @@ import { WaveDromGenerator } from './hdl/WaveDromGenerator';
 import { HdlWatcher } from './hdl/HdlWatcher';
 import { TruthTableGenerator } from './truthTable/TruthTableGenerator';
 import { TruthTableRenderer } from './truthTable/TruthTableRenderer';
+import { TruthTableParser } from './truthTable/TruthTableParser';
+import { CaseStatementGenerator } from './truthTable/CaseStatementGenerator';
 import { parseModulePorts, renderModulePortXml } from './hdl/ModulePortRenderer';
 import { extractFsm, renderFsmXml } from './hdl/FsmExtractor';
 import { parseVcd, vcdToWaveDrom } from './hdl/VcdParser';
@@ -224,6 +226,129 @@ export function activate(context: vscode.ExtensionContext): void {
                 vscode.window.showInformationMessage('Truth table inserted into diagram.');
             } catch (err) {
                 vscode.window.showErrorMessage(`Truth table error: ${err}`);
+            }
+        })
+    );
+
+    // Import Truth Table from CSV / Markdown
+    context.subscriptions.push(
+        vscode.commands.registerCommand('drawwave.importTruthTable', async () => {
+            const source = await vscode.window.showQuickPick(
+                [
+                    { label: 'From file', description: 'Open a CSV or Markdown file' },
+                    { label: 'From editor selection', description: 'Use selected text in the active editor' },
+                ],
+                { placeHolder: 'Select truth table source' }
+            );
+            if (!source) { return; }
+
+            let text: string | undefined;
+
+            if (source.label === 'From file') {
+                const uris = await vscode.window.showOpenDialog({
+                    filters: {
+                        'Truth Table': ['csv', 'md', 'txt'],
+                    },
+                    canSelectMany: false,
+                    openLabel: 'Import Truth Table',
+                });
+                if (!uris || uris.length === 0) { return; }
+                const bytes = await vscode.workspace.fs.readFile(uris[0]);
+                text = Buffer.from(bytes).toString('utf-8');
+            } else {
+                const editor = vscode.window.activeTextEditor;
+                if (!editor || editor.selection.isEmpty) {
+                    vscode.window.showWarningMessage('No text selected in the active editor.');
+                    return;
+                }
+                text = editor.document.getText(editor.selection);
+            }
+
+            if (!text || text.trim().length === 0) {
+                vscode.window.showWarningMessage('No truth table data found.');
+                return;
+            }
+
+            try {
+                const table = TruthTableParser.parse(text);
+                const xml = truthTableRenderer.renderRawToDrawioXml(table);
+                await drawioProvider.insertTruthTableXml(xml);
+                vscode.window.showInformationMessage(
+                    `Truth table imported (${table.inputs.length} inputs, ${table.outputs.length} outputs, ${table.rows.length} rows).`
+                );
+            } catch (err) {
+                vscode.window.showErrorMessage(`Truth table import error: ${err}`);
+            }
+        })
+    );
+
+    // Generate SystemVerilog case statement from truth table
+    context.subscriptions.push(
+        vscode.commands.registerCommand('drawwave.generateCaseStatement', async () => {
+            const source = await vscode.window.showQuickPick(
+                [
+                    { label: 'From CSV/Markdown file', description: 'Open a CSV or Markdown file' },
+                    { label: 'From editor selection', description: 'Use selected text in the active editor' },
+                    { label: 'From boolean expressions', description: 'Enter input signals and output expressions' },
+                ],
+                { placeHolder: 'Select truth table source for case statement generation' }
+            );
+            if (!source) { return; }
+
+            let code: string | undefined;
+
+            try {
+                if (source.label === 'From CSV/Markdown file') {
+                    const uris = await vscode.window.showOpenDialog({
+                        filters: {
+                            'Truth Table': ['csv', 'md', 'txt'],
+                        },
+                        canSelectMany: false,
+                        openLabel: 'Select Truth Table',
+                    });
+                    if (!uris || uris.length === 0) { return; }
+                    const bytes = await vscode.workspace.fs.readFile(uris[0]);
+                    const text = Buffer.from(bytes).toString('utf-8');
+                    code = CaseStatementGenerator.generateFromRaw(TruthTableParser.parse(text));
+
+                } else if (source.label === 'From editor selection') {
+                    const editor = vscode.window.activeTextEditor;
+                    if (!editor || editor.selection.isEmpty) {
+                        vscode.window.showWarningMessage('No text selected in the active editor.');
+                        return;
+                    }
+                    const text = editor.document.getText(editor.selection);
+                    code = CaseStatementGenerator.generateFromRaw(TruthTableParser.parse(text));
+
+                } else {
+                    const inputStr = await vscode.window.showInputBox({
+                        prompt: 'Enter input signals (comma separated)',
+                        placeHolder: 'a, b, c',
+                    });
+                    if (!inputStr) { return; }
+                    const inputs = inputStr.split(',').map(s => s.trim()).filter(s => s.length > 0);
+                    if (inputs.length === 0) {
+                        vscode.window.showWarningMessage('No input signals specified.');
+                        return;
+                    }
+                    const exprStr = await vscode.window.showInputBox({
+                        prompt: 'Enter output expressions (name=expr, comma separated)',
+                        placeHolder: 'y = a & b, z = a | ~b',
+                    });
+                    if (!exprStr) { return; }
+                    const outputs = TruthTableGenerator.parseOutputExpressions(exprStr);
+                    code = CaseStatementGenerator.generate(TruthTableGenerator.generate(inputs, outputs));
+                }
+
+                if (!code) { return; }
+                const doc = await vscode.workspace.openTextDocument({
+                    content: code,
+                    language: 'systemverilog',
+                });
+                await vscode.window.showTextDocument(doc);
+                vscode.window.showInformationMessage('SystemVerilog case statement generated.');
+            } catch (err) {
+                vscode.window.showErrorMessage(`Case statement generation error: ${err}`);
             }
         })
     );

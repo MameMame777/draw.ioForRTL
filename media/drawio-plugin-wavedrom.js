@@ -383,6 +383,24 @@ Draw.loadPlugin(function(ui) {
                     '<path fill="currentColor" d="M3 3h8v4H3V3zm10 0h8v4h-8V3zm-2 6h4v2h-4V9zM5 7v4H3V7h2zm16 0v4h-2V7h2zM3 13h8v4H3v-4zm10 0h8v4h-8v-4zM7 17v2H3v-2h4zm14 0v2h-4v-2h4zM1 21h8v2H1v-2zm14 0h8v2h-8v-2z"/>' +
                     '</svg>';
             }
+
+            // --- Truth Table CSV Import/Export buttons ---
+            ui.toolbar.addSeparator();
+
+            // Import Truth Table (CSV/Markdown) button
+            ui.actions.addAction('drawwaveImportTruthTable', function() {
+                if (window.__drawwave_vscode) {
+                    window.__drawwave_vscode.postMessage({ type: 'command', command: 'drawwave.importTruthTable' });
+                }
+            });
+            var importBtn = ui.toolbar.addItem('', 'drawwaveImportTruthTable');
+            if (importBtn) {
+                importBtn.setAttribute('title', 'Import Truth Table (CSV/Markdown)');
+                importBtn.innerHTML =
+                    '<svg viewBox="0 0 24 24" width="18" height="18" style="vertical-align:middle">' +
+                    '<path fill="currentColor" d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zM7 13h3v-2H7v2zm0 4h10v-2H7v2zm0-8h2V7H7v2z"/>' +
+                    '</svg>';
+            }
         }
     } catch (e) {
         console.log('DrawWave: Could not add toolbar button', e);
