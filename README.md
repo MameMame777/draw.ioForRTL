@@ -50,6 +50,26 @@ Additionally, 8 truth table shapes (AND, OR, XOR, NAND, NOR, Half Adder, 2:1 MUX
 - Generate truth tables from boolean expressions (e.g., `A & B`, `A ^ B | C`)
 - Insert truth tables as draw.io table shapes
 
+### CSV/Markdown Table Import
+
+- Import tables from CSV or Markdown files directly into draw.io
+- Alternatively, paste from editor selection
+- Input/output columns separated by an empty column header
+- Values kept as-is (strings, hex, binary, etc.)
+
+**CSV example:**
+```csv
+a,b,,y,z
+0x000,2,,"d",1
+```
+
+**Markdown example:**
+```markdown
+| a | b | | y | z |
+|---|---|---|---|---|
+| 0 | 1 | | d | 1 |
+```
+
 ### HDL → WaveDrom Generation
 
 - Parse Verilog / SystemVerilog files and auto-generate WaveDrom timing diagrams
@@ -100,7 +120,7 @@ Additionally, 8 truth table shapes (AND, OR, XOR, NAND, NOR, Half Adder, 2:1 MUX
 Or from the command line:
 
 ```bash
-code --install-extension drawwave-0.1.0.vsix
+code --install-extension drawwave-0.2.0.vsix
 ```
 
 ### Build from source
@@ -170,6 +190,7 @@ All commands are prefixed with `DrawWave:`:
 | Import VCD Waveform | Import simulation `.vcd` file and convert to WaveDrom |
 | Export as SVG | Export current diagram as SVG vector image |
 | Export as PNG | Export current diagram as PNG raster image |
+| Import Truth Table | Import CSV or Markdown table into draw.io |
 
 ## File Associations
 
