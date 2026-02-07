@@ -1,0 +1,7 @@
+{
+  "project": "pomo-timer",
+  "description": "Simple Pomodoro timer VS Code extension",
+  "permissions": {
+    "allow": []
+  }
+}

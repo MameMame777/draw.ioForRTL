@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "name": "Clock + Reset",
+    "category": "basic",
+    "description": "Basic clock with asynchronous and synchronous reset patterns",
+    "tags": ["clk", "reset", "async", "sync", "basic"]
+  },
+  "signal": [
+    { "name": "clk",        "wave": "p.........",  "period": 1 },
+    {},
+    ["Async Reset",
+      { "name": "arst_n",   "wave": "0.1........" },
+      { "name": "data_out", "wave": "x.=.=.=.=.=", "data": ["D0","D1","D2","D3","D4"] }
+    ],
+    {},
+    ["Sync Reset",
+      { "name": "srst",     "wave": "10........" },
+      { "name": "data_out", "wave": "x.=.=.=.=.=", "data": ["D0","D1","D2","D3","D4"] }
+    ]
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "Clock + Reset Patterns", "tick": 0 }
+}

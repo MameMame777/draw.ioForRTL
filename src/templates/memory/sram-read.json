@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "name": "SRAM Read",
+    "category": "memory",
+    "description": "Asynchronous SRAM read cycle with CE and OE",
+    "tags": ["sram", "memory", "read", "async"]
+  },
+  "signal": [
+    { "name": "clk",    "wave": "p........" },
+    {},
+    { "name": "CE_n",   "wave": "1.0....1." },
+    { "name": "OE_n",   "wave": "1..0...1." },
+    { "name": "WE_n",   "wave": "1........" },
+    { "name": "ADDR",   "wave": "x.=.=..x.", "data": ["A0","A1"] },
+    { "name": "DATA",   "wave": "z..=.=.z.", "data": ["D0","D1"] }
+  ],
+  "edge": ["a~>b tAA (Address Access Time)"],
+  "config": { "hscale": 2 },
+  "head": { "text": "SRAM Read Cycle", "tick": 0 }
+}

@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "name": "Protocol FSM",
+    "category": "fsm",
+    "description": "Request/Grant/Transfer/Done protocol FSM pattern",
+    "tags": ["fsm", "state-machine", "protocol", "arbiter"]
+  },
+  "signal": [
+    { "name": "clk",     "wave": "p............" },
+    {},
+    { "name": "req",     "wave": "0.1..0......." },
+    { "name": "grant",   "wave": "0..1.0......." },
+    { "name": "state",   "wave": "3..4.5.=.6.3.", "data": ["IDLE","GRANT","XFER","XFER","DONE","IDLE"] },
+    { "name": "xfer_en", "wave": "0....1...0..." },
+    { "name": "data",    "wave": "x....=.=.x...", "data": ["PKT0","PKT1"] },
+    { "name": "done",    "wave": "0........10.." }
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "Protocol FSM (REQ/GRANT)", "tick": 0 }
+}

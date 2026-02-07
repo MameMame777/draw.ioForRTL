@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "name": "SRAM Write",
+    "category": "memory",
+    "description": "Asynchronous SRAM write cycle with CE and WE",
+    "tags": ["sram", "memory", "write", "async"]
+  },
+  "signal": [
+    { "name": "clk",    "wave": "p........" },
+    {},
+    { "name": "CE_n",   "wave": "1.0....1." },
+    { "name": "OE_n",   "wave": "1........" },
+    { "name": "WE_n",   "wave": "1..0.1.1." },
+    { "name": "ADDR",   "wave": "x.=....x.", "data": ["ADDR"] },
+    { "name": "DATA",   "wave": "x..=...x.", "data": ["WDATA"] }
+  ],
+  "edge": ["a~>b tWC (Write Cycle Time)"],
+  "config": { "hscale": 2 },
+  "head": { "text": "SRAM Write Cycle", "tick": 0 }
+}

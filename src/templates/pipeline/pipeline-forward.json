@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "name": "Pipeline Forwarding",
+    "category": "pipeline",
+    "description": "Pipeline with data forwarding (bypass) to resolve hazards",
+    "tags": ["pipeline", "forward", "bypass", "hazard"]
+  },
+  "signal": [
+    { "name": "clk",        "wave": "p.........." },
+    {},
+    ["Pipeline Stages",
+      { "name": "Fetch",     "wave": "x=.=.=.=...", "data": ["ADD","SUB","AND","OR"] },
+      { "name": "Decode",    "wave": "x.=.=.=.=..", "data": ["ADD","SUB","AND","OR"] },
+      { "name": "Execute",   "wave": "x..=.=.=.=.", "data": ["ADD","SUB","AND","OR"] },
+      { "name": "Writeback", "wave": "x...=.=.=.=", "data": ["ADD","SUB","AND","OR"] }
+    ],
+    {},
+    ["Forwarding",
+      { "name": "fwd_sel",  "wave": "x...0.=..0.", "data": ["EX→EX"] },
+      { "name": "fwd_data", "wave": "x.....=..x.", "data": ["R_ADD"] },
+      { "name": "hazard",   "wave": "0....10...." }
+    ]
+  ],
+  "edge": ["a~>b Forward Path"],
+  "config": { "hscale": 1 },
+  "head": { "text": "Data Forwarding", "tick": 0 }
+}

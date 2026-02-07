@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "name": "Simple FSM",
+    "category": "fsm",
+    "description": "3-state FSM: IDLE → RUN → DONE with enable/done signals",
+    "tags": ["fsm", "state-machine", "simple"]
+  },
+  "signal": [
+    { "name": "clk",    "wave": "p.........." },
+    { "name": "rst_n",  "wave": "0.1........" },
+    {},
+    { "name": "enable", "wave": "0..1.0....." },
+    { "name": "state",  "wave": "x.3.4..5.3.", "data": ["IDLE","RUN","DONE","IDLE"] },
+    { "name": "busy",   "wave": "0..1...0..." },
+    { "name": "done",   "wave": "0......10.." }
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "Simple 3-State FSM", "tick": 0 }
+}

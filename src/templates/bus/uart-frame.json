@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "name": "UART Frame",
+    "category": "bus",
+    "description": "UART frame: Start + 8-bit Data + Parity + Stop",
+    "tags": ["uart", "serial", "bus", "rs232"]
+  },
+  "signal": [
+    { "name": "TX",  "wave": "1.0=.=.=.=.=.=.=.=.=.1..", "data": ["S","D0","D1","D2","D3","D4","D5","D6","D7","P","Stop"] },
+    {},
+    { "name": "baud_clk", "wave": "p......................." }
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "UART Frame (8N1)" },
+  "foot": { "text": "S=Start bit, D[7:0]=Data, P=Parity, Stop=Stop bit" }
+}

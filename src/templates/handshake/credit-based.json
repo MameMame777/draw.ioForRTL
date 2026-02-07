@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "name": "Credit-Based Flow Control",
+    "category": "handshake",
+    "description": "Credit-based flow control with credit counter",
+    "tags": ["credit", "flow-control", "handshake", "buffer"]
+  },
+  "signal": [
+    { "name": "clk",       "wave": "p............" },
+    {},
+    ["Sender",
+      { "name": "tx_valid", "wave": "0.1.....0...." },
+      { "name": "tx_data",  "wave": "x.=.=.=.x....", "data": ["P0","P1","P2"] },
+      { "name": "credits",  "wave": "=.=.=.=.=.=.=", "data": ["4","3","2","1","0","1","2"] }
+    ],
+    {},
+    ["Receiver",
+      { "name": "rx_valid", "wave": "0..1.....0..." },
+      { "name": "rx_data",  "wave": "x..=.=.=.x...", "data": ["P0","P1","P2"] },
+      { "name": "credit_ret","wave": "0.....1.1.0.." }
+    ]
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "Credit-Based Flow Control", "tick": 0 },
+  "foot": { "text": "Credits consumed on send, returned on receive" }
+}

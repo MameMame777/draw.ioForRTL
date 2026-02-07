@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "name": "Pipeline Stall",
+    "category": "pipeline",
+    "description": "Pipeline with stall (bubble insertion) due to data hazard",
+    "tags": ["pipeline", "stall", "bubble", "hazard"]
+  },
+  "signal": [
+    { "name": "clk",      "wave": "p............" },
+    {},
+    ["Pipeline Stages",
+      { "name": "Fetch",   "wave": "x=.=.=..=.=..", "data": ["I1","I2","I3","I4","I5"] },
+      { "name": "Decode",  "wave": "x.=.=.=..=.=.", "data": ["I1","I2","I3","I4","I5"] },
+      { "name": "Execute", "wave": "x..=.=.x.=.=.", "data": ["I1","I2","NOP","I3","I4"] }
+    ],
+    {},
+    ["Control",
+      { "name": "stall",   "wave": "0....10......" },
+      { "name": "bubble",  "wave": "0.....10....." },
+      { "name": "pc_en",   "wave": "1....01......" }
+    ]
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "Pipeline Stall (Data Hazard)", "tick": 0 }
+}

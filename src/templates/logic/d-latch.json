@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "name": "D Latch",
+    "category": "logic",
+    "description": "Level-sensitive D latch with enable",
+    "tags": ["latch", "d", "enable", "transparent"]
+  },
+  "signal": [
+    { "name": "en", "wave": "0.1...0.1." },
+    { "name": "d",  "wave": "x.01.0x.1." },
+    { "name": "q",  "wave": "x.01.0..1." },
+    {},
+    ["Behavior",
+      { "name": "en=1", "wave": "=.........", "data": ["Transparent: Q follows D"] },
+      { "name": "en=0", "wave": "=.........", "data": ["Latched: Q holds"] }
+    ]
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "D Latch (Level-Sensitive)", "tick": 0 }
+}

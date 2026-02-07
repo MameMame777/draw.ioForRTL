@@ -1,0 +1,381 @@
+{
+  "name": "drawwave",
+  "displayName": "DrawWave",
+  "description": "Integrated draw.io + WaveDrom + HDL design environment for VSCode",
+  "version": "0.1.0",
+  "publisher": "drawwave",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/DrawWave.git"
+  },
+  "homepage": "https://github.com/your-username/DrawWave#readme",
+  "bugs": {
+    "url": "https://github.com/your-username/DrawWave/issues"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "keywords": [
+    "wavedrom",
+    "drawio",
+    "draw.io",
+    "hdl",
+    "verilog",
+    "systemverilog",
+    "timing-diagram",
+    "waveform",
+    "truth-table",
+    "circuit-design"
+  ],
+  "activationEvents": [
+    "onLanguage:verilog",
+    "onLanguage:systemverilog",
+    "onCommand:drawwave.openWaveDromPreview",
+    "onCommand:drawwave.openDrawio",
+    "onCommand:drawwave.insertTemplate",
+    "onCommand:drawwave.generateFromHDL",
+    "onCommand:drawwave.insertWaveDromToDrawio",
+    "onCommand:drawwave.insertTruthTable",
+    "onCommand:drawwave.regenerate",
+    "onCommand:drawwave.exportSvg",
+    "onCommand:drawwave.exportPng",
+    "onCommand:drawwave.newWaveDromInDrawio",
+    "onCommand:drawwave.hdlToDrawio",
+    "onCommand:drawwave.templateToDrawio",
+    "onCommand:drawwave.editWaveDromSource",
+    "onCommand:drawwave.applyTemplateToWaveDrom",
+    "onCommand:drawwave.moduleHierarchy",
+    "onCustomEditor:drawwave.waveDromPreview",
+    "onCustomEditor:drawwave.drawioEditor"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "drawwave.openWaveDromPreview",
+        "title": "DrawWave: Open WaveDrom Preview",
+        "icon": "$(preview)"
+      },
+      {
+        "command": "drawwave.openDrawio",
+        "title": "DrawWave: Open Draw.io Editor",
+        "icon": "$(symbol-structure)"
+      },
+      {
+        "command": "drawwave.insertTemplate",
+        "title": "DrawWave: Insert WaveDrom Template",
+        "icon": "$(file-add)"
+      },
+      {
+        "command": "drawwave.generateFromHDL",
+        "title": "DrawWave: Generate WaveDrom from HDL",
+        "icon": "$(zap)"
+      },
+      {
+        "command": "drawwave.insertWaveDromToDrawio",
+        "title": "DrawWave: Insert WaveDrom to Diagram",
+        "icon": "$(add)"
+      },
+      {
+        "command": "drawwave.insertTruthTable",
+        "title": "DrawWave: Insert Truth Table",
+        "icon": "$(table)"
+      },
+      {
+        "command": "drawwave.regenerate",
+        "title": "DrawWave: Regenerate from HDL",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "drawwave.exportSvg",
+        "title": "DrawWave: Export as SVG",
+        "icon": "$(file-media)"
+      },
+      {
+        "command": "drawwave.exportPng",
+        "title": "DrawWave: Export as PNG",
+        "icon": "$(file-media)"
+      },
+      {
+        "command": "drawwave.newWaveDromInDrawio",
+        "title": "DrawWave: New WaveDrom Shape",
+        "icon": "$(wand)",
+        "category": "DrawWave"
+      },
+      {
+        "command": "drawwave.hdlToDrawio",
+        "title": "DrawWave: HDL → WaveDrom to Diagram",
+        "icon": "$(zap)",
+        "category": "DrawWave"
+      },
+      {
+        "command": "drawwave.templateToDrawio",
+        "title": "DrawWave: Insert Template to Diagram",
+        "icon": "$(file-add)",
+        "category": "DrawWave"
+      },
+      {
+        "command": "drawwave.editWaveDromSource",
+        "title": "DrawWave: Edit WaveDrom JSON Source",
+        "icon": "$(edit)",
+        "category": "DrawWave"
+      },
+      {
+        "command": "drawwave.applyTemplateToWaveDrom",
+        "title": "DrawWave: Apply Template to WaveDrom",
+        "icon": "$(file-add)",
+        "category": "DrawWave"
+      },
+      {
+        "command": "drawwave.importHdlToWaveDrom",
+        "title": "DrawWave: Import from HDL",
+        "icon": "$(code)",
+        "category": "DrawWave"
+      },
+      {
+        "command": "drawwave.modulePortDiagram",
+        "title": "DrawWave: Module Port Diagram",
+        "icon": "$(symbol-interface)",
+        "category": "DrawWave"
+      },
+      {
+        "command": "drawwave.fsmDiagram",
+        "title": "DrawWave: FSM State Transition Diagram",
+        "icon": "$(git-branch)",
+        "category": "DrawWave"
+      },
+      {
+        "command": "drawwave.importVcd",
+        "title": "DrawWave: Import VCD Waveform",
+        "icon": "$(graph)",
+        "category": "DrawWave"
+      },
+      {
+        "command": "drawwave.moduleHierarchy",
+        "title": "DrawWave: Module Hierarchy Diagram",
+        "icon": "$(type-hierarchy)",
+        "category": "DrawWave"
+      }
+    ],
+    "customEditors": [
+      {
+        "viewType": "drawwave.waveDromPreview",
+        "displayName": "WaveDrom Preview",
+        "selector": [
+          {
+            "filenamePattern": "*.wavedrom.json"
+          }
+        ],
+        "priority": "option"
+      },
+      {
+        "viewType": "drawwave.drawioEditor",
+        "displayName": "DrawWave Draw.io Editor",
+        "selector": [
+          {
+            "filenamePattern": "*.drawio"
+          },
+          {
+            "filenamePattern": "*.dio"
+          }
+        ],
+        "priority": "option"
+      }
+    ],
+    "languages": [
+      {
+        "id": "wavedrom-json",
+        "aliases": ["WaveDrom JSON"],
+        "extensions": [".wavedrom.json"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "when": "resourceFilename =~ /\\.wavedrom\\.json$/",
+          "command": "drawwave.openWaveDromPreview",
+          "group": "navigation"
+        },
+        {
+          "when": "activeCustomEditorId == 'drawwave.waveDromPreview'",
+          "command": "drawwave.editWaveDromSource",
+          "group": "navigation@1"
+        },
+        {
+          "when": "activeCustomEditorId == 'drawwave.waveDromPreview'",
+          "command": "drawwave.applyTemplateToWaveDrom",
+          "group": "navigation@2"
+        },
+        {
+          "when": "activeCustomEditorId == 'drawwave.waveDromPreview'",
+          "command": "drawwave.importHdlToWaveDrom",
+          "group": "navigation@3"
+        },
+        {
+          "when": "activeCustomEditorId == 'drawwave.waveDromPreview'",
+          "command": "drawwave.exportSvg",
+          "group": "navigation@4"
+        },
+        {
+          "when": "activeCustomEditorId == 'drawwave.waveDromPreview'",
+          "command": "drawwave.exportPng",
+          "group": "navigation@5"
+        },
+        {
+          "when": "activeCustomEditorId == 'drawwave.drawioEditor'",
+          "command": "drawwave.newWaveDromInDrawio",
+          "group": "navigation@1"
+        },
+        {
+          "when": "activeCustomEditorId == 'drawwave.drawioEditor'",
+          "command": "drawwave.insertTruthTable",
+          "group": "navigation@2"
+        },
+        {
+          "when": "activeCustomEditorId == 'drawwave.drawioEditor'",
+          "command": "drawwave.templateToDrawio",
+          "group": "navigation@3"
+        },
+        {
+          "when": "activeCustomEditorId == 'drawwave.drawioEditor'",
+          "command": "drawwave.hdlToDrawio",
+          "group": "navigation@4"
+        },
+        {
+          "when": "activeCustomEditorId == 'drawwave.drawioEditor'",
+          "command": "drawwave.modulePortDiagram",
+          "group": "navigation@5"
+        },
+        {
+          "when": "activeCustomEditorId == 'drawwave.drawioEditor'",
+          "command": "drawwave.fsmDiagram",
+          "group": "navigation@6"
+        },
+        {
+          "when": "activeCustomEditorId == 'drawwave.drawioEditor'",
+          "command": "drawwave.importVcd",
+          "group": "navigation@7"
+        },
+        {
+          "when": "activeCustomEditorId == 'drawwave.drawioEditor'",
+          "command": "drawwave.moduleHierarchy",
+          "group": "navigation@8"
+        }
+      ],
+      "editor/context": [
+        {
+          "when": "resourceLangId == verilog || resourceLangId == systemverilog",
+          "command": "drawwave.generateFromHDL",
+          "group": "drawwave"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "drawwave.newWaveDromInDrawio",
+          "when": "activeCustomEditorId == 'drawwave.drawioEditor'"
+        },
+        {
+          "command": "drawwave.hdlToDrawio",
+          "when": "activeCustomEditorId == 'drawwave.drawioEditor'"
+        },
+        {
+          "command": "drawwave.templateToDrawio",
+          "when": "activeCustomEditorId == 'drawwave.drawioEditor'"
+        },
+        {
+          "command": "drawwave.editWaveDromSource",
+          "when": "activeCustomEditorId == 'drawwave.waveDromPreview'"
+        },
+        {
+          "command": "drawwave.applyTemplateToWaveDrom",
+          "when": "activeCustomEditorId == 'drawwave.waveDromPreview'"
+        },
+        {
+          "command": "drawwave.exportSvg",
+          "when": "activeCustomEditorId == 'drawwave.waveDromPreview'"
+        },
+        {
+          "command": "drawwave.exportPng",
+          "when": "activeCustomEditorId == 'drawwave.waveDromPreview'"        },
+        {
+          "command": "drawwave.importHdlToWaveDrom",
+          "when": "activeCustomEditorId == 'drawwave.waveDromPreview'"        }
+      ]
+    },
+    "configuration": {
+      "title": "DrawWave",
+      "properties": {
+        "drawwave.wavedrom.autoPreview": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically open preview when opening .wavedrom.json files"
+        },
+        "drawwave.wavedrom.debounceMs": {
+          "type": "number",
+          "default": 300,
+          "description": "Debounce delay (ms) for live preview updates"
+        },
+        "drawwave.hdl.abstractionLevel": {
+          "type": "string",
+          "default": "L1",
+          "enum": ["L0", "L1", "L2"],
+          "enumDescriptions": [
+            "L0: Clock and Reset only",
+            "L1: + Control signals and FSM",
+            "L2: + Data transitions"
+          ],
+          "description": "Default abstraction level for HDL waveform generation"
+        },
+        "drawwave.hdl.autoRegenerate": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically regenerate WaveDrom when HDL files change"
+        },
+        "drawwave.drawio.theme": {
+          "type": "string",
+          "default": "kennedy",
+          "enum": ["kennedy", "min", "atlas", "dark", "sketch"],
+          "description": "Draw.io editor theme"
+        },
+        "drawwave.drawio.offline": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use bundled draw.io webapp for offline/local execution. Falls back to online mode if webapp is not installed."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./ && npm run copy-templates",
+    "copy-templates": "node -e \"const fs=require('fs'),p=require('path');function c(s,d){fs.mkdirSync(d,{recursive:true});fs.readdirSync(s).forEach(f=>{const sp=p.join(s,f),dp=p.join(d,f);fs.statSync(sp).isDirectory()?c(sp,dp):f.endsWith('.json')&&fs.copyFileSync(sp,dp)})}c('src/templates','out/templates')\"",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "pretest": "npm run compile",
+    "test": "vscode-test",
+    "setup-drawio": "node scripts/download-drawio.js",
+    "generate-library": "node scripts/generate-drawio-library.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-cli": "^0.0.6",
+    "@vscode/test-electron": "^2.3.8",
+    "@vscode/vsce": "^2.22.0",
+    "eslint": "^8.56.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "wavedrom": "^3.5.0",
+    "onml": "^2.1.0"
+  }
+}

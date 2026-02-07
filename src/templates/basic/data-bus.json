@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "name": "Data Bus",
+    "category": "basic",
+    "description": "Address + data bus with valid signal pattern",
+    "tags": ["data", "bus", "addr", "valid", "basic"]
+  },
+  "signal": [
+    { "name": "clk",     "wave": "p........" },
+    {},
+    { "name": "valid",   "wave": "0.1...0.." },
+    { "name": "addr",    "wave": "x.=.=.x..", "data": ["A0","A1"] },
+    { "name": "wdata",   "wave": "x.=.=.x..", "data": ["D0","D1"] },
+    { "name": "rdata",   "wave": "x...=.=..", "data": ["R0","R1"] },
+    { "name": "ready",   "wave": "1........." }
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "Data Bus Transfer", "tick": 0 }
+}

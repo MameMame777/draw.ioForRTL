@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "name": "JK Flip-Flop",
+    "category": "logic",
+    "description": "JK flip-flop with toggle behavior (J=K=1)",
+    "tags": ["jk", "flipflop", "ff", "toggle"]
+  },
+  "signal": [
+    { "name": "clk", "wave": "p........." },
+    { "name": "J",   "wave": "0.1.0.1.0." },
+    { "name": "K",   "wave": "0...1.1.0." },
+    { "name": "Q",   "wave": "0..1..01.." },
+    {},
+    ["Function",
+      { "name": "J=0,K=0", "wave": "=.........", "data": ["Hold"] },
+      { "name": "J=1,K=0", "wave": "=.........", "data": ["Set"] },
+      { "name": "J=0,K=1", "wave": "=.........", "data": ["Reset"] },
+      { "name": "J=1,K=1", "wave": "=.........", "data": ["Toggle"] }
+    ]
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "JK Flip-Flop", "tick": 0 }
+}

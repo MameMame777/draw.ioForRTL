@@ -1,0 +1,15 @@
+{
+  "signal": [
+    { "name": "clk",   "wave": "p......" },
+    { "name": "reset", "wave": "10....." },
+    {},
+    { "name": "addr",  "wave": "x.=.=.x", "data": ["A0", "A1"] },
+    { "name": "data",  "wave": "x...=.x", "data": ["D0"] },
+    { "name": "valid", "wave": "0.1..0." },
+    { "name": "ready", "wave": "0..10.." }
+  ],
+  "config": { "hscale": 2 },
+  "head": {
+    "text": "Sample Bus Transaction"
+  }
+}

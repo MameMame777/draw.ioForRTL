@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "name": "D Flip-Flop",
+    "category": "logic",
+    "description": "D flip-flop with clock, setup/hold timing, and async reset",
+    "tags": ["dff", "flipflop", "ff", "d", "register"]
+  },
+  "signal": [
+    { "name": "clk",   "wave": "p........" },
+    { "name": "rst_n", "wave": "0.1......" },
+    { "name": "d",     "wave": "x.0.1.0.1" },
+    { "name": "q",     "wave": "x..0.1.0." },
+    {},
+    { "name": "setup", "node": "...a.b..." },
+    { "name": "hold",  "node": "...c.d..." }
+  ],
+  "edge": [
+    "a|b setup time",
+    "c|d hold time"
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "D Flip-Flop", "tick": 0 }
+}

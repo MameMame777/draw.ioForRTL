@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "name": "AHB Transfer",
+    "category": "bus",
+    "description": "AHB single and burst transfers with wait states",
+    "tags": ["ahb", "amba", "bus", "burst"]
+  },
+  "signal": [
+    { "name": "HCLK",      "wave": "p.........." },
+    {},
+    ["Address Phase",
+      { "name": "HTRANS",  "wave": "x.=.=.=.=.x", "data": ["NONSEQ","SEQ","SEQ","SEQ"] },
+      { "name": "HADDR",   "wave": "x.=.=.=.=.x", "data": ["A0","A1","A2","A3"] },
+      { "name": "HWRITE",  "wave": "x.1.......x" },
+      { "name": "HSIZE",   "wave": "x.=.......x", "data": ["WORD"] },
+      { "name": "HBURST",  "wave": "x.=.......x", "data": ["INCR4"] }
+    ],
+    {},
+    ["Data Phase",
+      { "name": "HWDATA",  "wave": "x..=.=.=.=.", "data": ["D0","D1","D2","D3"] },
+      { "name": "HRDATA",  "wave": "x..........", "data": [] },
+      { "name": "HREADY",  "wave": "1.........." },
+      { "name": "HRESP",   "wave": "x.=.......x", "data": ["OKAY"] }
+    ]
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "AHB Burst Transfer (INCR4)", "tick": 0 }
+}

@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "name": "3-Stage Pipeline",
+    "category": "pipeline",
+    "description": "Classic 3-stage pipeline: Fetch → Decode → Execute",
+    "tags": ["pipeline", "cpu", "fetch", "decode", "execute"]
+  },
+  "signal": [
+    { "name": "clk",      "wave": "p.........." },
+    {},
+    ["Instruction Flow",
+      { "name": "Fetch",   "wave": "x=.=.=.=.=.", "data": ["I1","I2","I3","I4","I5"] },
+      { "name": "Decode",  "wave": "x.=.=.=.=.=", "data": ["I1","I2","I3","I4","I5"] },
+      { "name": "Execute", "wave": "x..=.=.=.=.", "data": ["I1","I2","I3","I4"] }
+    ],
+    {},
+    ["Control",
+      { "name": "pc_en",   "wave": "1.........." },
+      { "name": "valid",   "wave": "0.1........" }
+    ]
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "3-Stage Pipeline", "tick": 0 }
+}

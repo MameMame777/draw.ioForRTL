@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "name": "SR Latch",
+    "category": "logic",
+    "description": "SR latch (NOR-based) with set/reset behavior",
+    "tags": ["sr", "latch", "set", "reset", "nor"]
+  },
+  "signal": [
+    { "name": "S", "wave": "0.10..10.." },
+    { "name": "R", "wave": "0....10..1" },
+    { "name": "Q", "wave": "0.1...0.1." },
+    { "name": "Q̅", "wave": "1.0...1.0." },
+    {},
+    ["Function",
+      { "name": "S=0,R=0", "wave": "=.........", "data": ["Hold"] },
+      { "name": "S=1,R=0", "wave": "=.........", "data": ["Set (Q=1)"] },
+      { "name": "S=0,R=1", "wave": "=.........", "data": ["Reset (Q=0)"] },
+      { "name": "S=1,R=1", "wave": "=.........", "data": ["Invalid"] }
+    ]
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "SR Latch (NOR)", "tick": 0 }
+}

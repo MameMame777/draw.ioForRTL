@@ -1,0 +1,93 @@
+<mxfile host="0rbvms8svdfa6ddmhs4il55nf4m3nqi1ldigg16pump2qvoa184o" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.109.0 Chrome/142.0.7444.265 Electron/39.3.0 Safari/537.36" version="24.7.17">
+  <diagram id="sJsWiv---aa1AqBnot_v" name="Page-1">
+    <mxGraphModel dx="1444" dy="978" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" value="" style="group" parent="1" vertex="1" connectable="0">
+          <mxGeometry x="100" y="100" width="320" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="fifo" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=8;" parent="2" vertex="1">
+          <mxGeometry x="40" width="240" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="clk" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=11;" parent="2" vertex="1">
+          <mxGeometry x="48" y="40" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="" style="endArrow=block;endFill=1;strokeWidth=1;strokeColor=#000000;" parent="2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="53" as="sourcePoint" />
+            <mxPoint x="40" y="53" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6" value="rst_n" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=11;" parent="2" vertex="1">
+          <mxGeometry x="48" y="66" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="" style="endArrow=block;endFill=1;strokeWidth=1;strokeColor=#000000;" parent="2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="79" as="sourcePoint" />
+            <mxPoint x="40" y="79" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8" value="wr_en" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=11;" parent="2" vertex="1">
+          <mxGeometry x="48" y="92" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="" style="endArrow=block;endFill=1;strokeWidth=1;strokeColor=#000000;" parent="2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="105" as="sourcePoint" />
+            <mxPoint x="40" y="105" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="10" value="rd_en" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=11;" parent="2" vertex="1">
+          <mxGeometry x="48" y="118" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="" style="endArrow=block;endFill=1;strokeWidth=1;strokeColor=#000000;" parent="2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="131" as="sourcePoint" />
+            <mxPoint x="40" y="131" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="12" value="wdata [7:0]" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=11;" parent="2" vertex="1">
+          <mxGeometry x="48" y="144" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="13" value="" style="endArrow=block;endFill=1;strokeWidth=3;strokeColor=#0000FF;" parent="2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="157" as="sourcePoint" />
+            <mxPoint x="40" y="157" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="14" value="rdata [7:0]" style="text;html=1;align=right;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=11;" parent="2" vertex="1">
+          <mxGeometry x="152" y="40" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="15" value="" style="endArrow=block;endFill=1;strokeWidth=3;strokeColor=#0000FF;" parent="2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="280" y="53" as="sourcePoint" />
+            <mxPoint x="320" y="53" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <UserObject label="full" link="e:\Nautilus\workspace\TSwork\DrawWave\test\fixtures\sample.sv" hdlFilePath="e:\Nautilus\workspace\TSwork\DrawWave\test\fixtures\sample.sv" id="16">
+          <mxCell style="text;html=1;align=right;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=11;" parent="2" vertex="1">
+            <mxGeometry x="152" y="66" width="120" height="26" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="17" value="" style="endArrow=block;endFill=1;strokeWidth=1;strokeColor=#000000;" parent="2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="280" y="79" as="sourcePoint" />
+            <mxPoint x="320" y="79" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="18" value="empty" style="text;html=1;align=right;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=11;" parent="2" vertex="1">
+          <mxGeometry x="152" y="92" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="19" value="" style="endArrow=block;endFill=1;strokeWidth=1;strokeColor=#000000;" parent="2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="280" y="105" as="sourcePoint" />
+            <mxPoint x="320" y="105" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="20" value="#(DATA_WIDTH=8, DEPTH=16, ADDR_WIDTH=$clog2(DEPTH))" style="text;html=1;align=right;verticalAlign=bottom;fontSize=10;fontColor=#666666;fontStyle=2;strokeColor=none;fillColor=none;" parent="2" vertex="1">
+          <mxGeometry x="40" y="-24" width="240" height="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

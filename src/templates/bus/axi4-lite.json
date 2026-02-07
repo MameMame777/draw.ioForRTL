@@ -1,0 +1,33 @@
+{
+  "meta": {
+    "name": "AXI4-Lite",
+    "category": "bus",
+    "description": "AXI4-Lite simple read/write transaction",
+    "tags": ["axi", "axi4-lite", "amba", "bus", "simple"]
+  },
+  "signal": [
+    { "name": "ACLK",     "wave": "p........" },
+    {},
+    ["Write",
+      { "name": "AWVALID", "wave": "0.10....." },
+      { "name": "AWREADY", "wave": "0.10....." },
+      { "name": "AWADDR",  "wave": "x.=.x....", "data": ["WR_ADDR"] },
+      { "name": "WVALID",  "wave": "0.10....." },
+      { "name": "WREADY",  "wave": "0.10....." },
+      { "name": "WDATA",   "wave": "x.=.x....", "data": ["WR_DATA"] },
+      { "name": "BVALID",  "wave": "0..10...." },
+      { "name": "BREADY",  "wave": "1........" }
+    ],
+    {},
+    ["Read",
+      { "name": "ARVALID", "wave": "0....10.." },
+      { "name": "ARREADY", "wave": "0....10.." },
+      { "name": "ARADDR",  "wave": "x....=.x.", "data": ["RD_ADDR"] },
+      { "name": "RVALID",  "wave": "0.....10." },
+      { "name": "RREADY",  "wave": "1........" },
+      { "name": "RDATA",   "wave": "x.....=.x", "data": ["RD_DATA"] }
+    ]
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "AXI4-Lite Read/Write", "tick": 0 }
+}

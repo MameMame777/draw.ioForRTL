@@ -1,0 +1,17 @@
+{
+  "meta": {
+    "name": "SPI Transaction",
+    "category": "bus",
+    "description": "SPI Mode 0 (CPOL=0, CPHA=0) full-duplex transaction",
+    "tags": ["spi", "serial", "bus", "mosi", "miso"]
+  },
+  "signal": [
+    { "name": "CS_n",   "wave": "10.......1" },
+    { "name": "SCLK",   "wave": "0.p......0" },
+    { "name": "MOSI",   "wave": "x.=.=.=.=x", "data": ["B7","B6","B5","B4..."] },
+    { "name": "MISO",   "wave": "x..=.=.=.x", "data": ["R7","R6","R5..."] }
+  ],
+  "config": { "hscale": 2 },
+  "head": { "text": "SPI Mode 0 Transaction", "tick": 0 },
+  "foot": { "text": "CPOL=0, CPHA=0" }
+}

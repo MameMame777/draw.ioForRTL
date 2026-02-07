@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "name": "AND / OR / NOT",
+    "category": "logic",
+    "description": "Basic logic gates: AND, OR, NOT timing behavior",
+    "tags": ["and", "or", "not", "gate", "combinational"]
+  },
+  "signal": [
+    { "name": "A",     "wave": "01.0.1.0.1" },
+    { "name": "B",     "wave": "0.1.0..1.." },
+    {},
+    ["Gates",
+      { "name": "A AND B", "wave": "0..0.0.0.1" },
+      { "name": "A OR B",  "wave": "01.1.1.1.1" },
+      { "name": "NOT A",   "wave": "10.1.0.1.0" }
+    ]
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "AND / OR / NOT Gates", "tick": 0 }
+}

@@ -1,0 +1,36 @@
+{
+  "meta": {
+    "name": "AXI4 Write Channel",
+    "category": "bus",
+    "description": "AXI4 Write Address (AW) + Write Data (W) + Write Response (B) channels",
+    "tags": ["axi", "axi4", "amba", "write", "bus"]
+  },
+  "signal": [
+    { "name": "ACLK",     "wave": "p............" },
+    {},
+    ["Write Address",
+      { "name": "AWVALID", "wave": "0.1.0........" },
+      { "name": "AWREADY", "wave": "0..10........" },
+      { "name": "AWADDR",  "wave": "x.=.x........", "data": ["ADDR"] },
+      { "name": "AWLEN",   "wave": "x.=.x........", "data": ["3"] },
+      { "name": "AWSIZE",  "wave": "x.=.x........", "data": ["2"] },
+      { "name": "AWBURST", "wave": "x.=.x........", "data": ["INCR"] }
+    ],
+    {},
+    ["Write Data",
+      { "name": "WVALID",  "wave": "0...1.....0.." },
+      { "name": "WREADY",  "wave": "0...1.....0.." },
+      { "name": "WDATA",   "wave": "x...=.=.=.=.x", "data": ["D0","D1","D2","D3"] },
+      { "name": "WSTRB",   "wave": "x...=.....x..", "data": ["0xF"] },
+      { "name": "WLAST",   "wave": "0.........10." }
+    ],
+    {},
+    ["Write Response",
+      { "name": "BVALID",  "wave": "0..........10" },
+      { "name": "BREADY",  "wave": "1............" },
+      { "name": "BRESP",   "wave": "x..........=x", "data": ["OKAY"] }
+    ]
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "AXI4 Write Transaction", "tick": 0 }
+}

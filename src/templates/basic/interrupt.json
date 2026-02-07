@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "name": "Interrupt",
+    "category": "basic",
+    "description": "Interrupt request and acknowledge handshake",
+    "tags": ["interrupt", "irq", "ack", "basic"]
+  },
+  "signal": [
+    { "name": "clk",    "wave": "p.........." },
+    {},
+    { "name": "irq",    "wave": "0..1....0.." },
+    { "name": "ack",    "wave": "0.....1.0.." },
+    { "name": "isr",    "wave": "0...1...0.." },
+    { "name": "data",   "wave": "x...=.=.x..", "data": ["ISR_DATA","RESULT"] }
+  ],
+  "edge": [ "a~>b IRQ latency", "b~>c ACK" ],
+  "config": { "hscale": 1 },
+  "head": { "text": "Interrupt Handling", "tick": 0 }
+}

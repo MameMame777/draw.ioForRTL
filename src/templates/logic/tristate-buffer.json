@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "name": "Tri-State Buffer",
+    "category": "logic",
+    "description": "Tri-state buffer with output enable control",
+    "tags": ["tristate", "buffer", "highz", "oe", "bidirectional"]
+  },
+  "signal": [
+    { "name": "oe_n", "wave": "10..1.0..." },
+    { "name": "din",  "wave": "=.=.=.=.=.", "data": ["D0", "D1", "D2", "D3", "D4"] },
+    { "name": "bus",  "wave": "z.=.z.=.=.", "data": ["D0", "D3", "D4"] },
+    {},
+    ["Bidirectional",
+      { "name": "dir",    "wave": "0...1.0..." },
+      { "name": "oe_n",   "wave": "0.........", "data": [] },
+      { "name": "a_in",   "wave": "=.=.x.=.=.", "data": ["A0", "A1", "A2", "A3"] },
+      { "name": "b_in",   "wave": "x.x.=.x.x.", "data": ["B0"] },
+      { "name": "bus",    "wave": "=.=.=.=.=.", "data": ["A0", "A1", "B0", "A2", "A3"] }
+    ]
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "Tri-State Buffer", "tick": 0 }
+}

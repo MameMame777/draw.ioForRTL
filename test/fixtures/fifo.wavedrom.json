@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "source": "e:\\Nautilus\\workspace\\TSwork\\DrawWave\\test\\fixtures\\sample.sv",
+    "module": "fifo",
+    "level": "L1"
+  },
+  "signal": [
+    {
+      "name": "clk",
+      "wave": "p........."
+    },
+    {},
+    {
+      "name": "rst_n",
+      "wave": "0.1......."
+    },
+    {},
+    {
+      "name": "wr_en",
+      "wave": "0..1..0..."
+    },
+    {
+      "name": "rd_en",
+      "wave": "0..1..0..."
+    },
+    {
+      "name": "full",
+      "wave": "0..1..0..."
+    },
+    {
+      "name": "empty",
+      "wave": "0..1..0..."
+    },
+    {},
+    {
+      "name": "state",
+      "wave": "x.3.4.5.6.",
+      "data": [
+        "idle",
+        "write",
+        "read",
+        "full"
+      ]
+    }
+  ],
+  "config": {
+    "hscale": 1
+  },
+  "head": {
+    "text": "fifo — L1",
+    "tick": 0
+  }
+}

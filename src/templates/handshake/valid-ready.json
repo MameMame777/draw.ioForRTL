@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "name": "Valid/Ready Handshake",
+    "category": "handshake",
+    "description": "AXI-Stream style valid/ready handshake with backpressure",
+    "tags": ["valid", "ready", "handshake", "axi-stream", "backpressure"]
+  },
+  "signal": [
+    { "name": "clk",    "wave": "p.........." },
+    {},
+    { "name": "valid",  "wave": "0.1......0." },
+    { "name": "ready",  "wave": "0..1.01.0.." },
+    { "name": "data",   "wave": "x.=.=.=.=.x", "data": ["D0","D1","D2","D3"] },
+    {},
+    { "name": "xfer",   "wave": "0..1.0.1.0.", "node": "...a.....b." }
+  ],
+  "edge": ["a-~>b Backpressure gap"],
+  "config": { "hscale": 2 },
+  "head": { "text": "Valid/Ready Handshake", "tick": 0 },
+  "foot": { "text": "Transfer occurs when valid=1 AND ready=1" }
+}

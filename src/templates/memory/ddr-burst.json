@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "name": "DDR Burst",
+    "category": "memory",
+    "description": "DDR memory burst read/write with CAS latency",
+    "tags": ["ddr", "memory", "burst", "sdram"]
+  },
+  "signal": [
+    { "name": "CLK",     "wave": "p............." },
+    { "name": "CLK#",    "wave": "n............." },
+    {},
+    ["Command",
+      { "name": "CS_n",   "wave": "0............." },
+      { "name": "RAS_n",  "wave": "10.1..0.1....." },
+      { "name": "CAS_n",  "wave": "1.0.1....0.1.." },
+      { "name": "WE_n",   "wave": "1............." }
+    ],
+    {},
+    { "name": "BA",      "wave": "x=...........x", "data": ["Bank0"] },
+    { "name": "ADDR",    "wave": "x=.=.x...=.x..", "data": ["ROW","COL_RD","COL_WR"] },
+    {},
+    { "name": "DQS",     "wave": "z...0p...z...." },
+    { "name": "DQ",      "wave": "z....=.=.=.=.z", "data": ["D0","D1","D2","D3"] }
+  ],
+  "edge": ["a~>b CAS Latency"],
+  "config": { "hscale": 1 },
+  "head": { "text": "DDR Burst Read (BL=4, CL=2)", "tick": 0 }
+}

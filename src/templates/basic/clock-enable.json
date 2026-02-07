@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "name": "Clock Enable",
+    "category": "basic",
+    "description": "Clock with clock enable (CE) gating pattern",
+    "tags": ["clk", "clock-enable", "gating", "basic"]
+  },
+  "signal": [
+    { "name": "clk",     "wave": "p..........", "period": 1 },
+    { "name": "ce",      "wave": "0.1..0.1..." },
+    { "name": "gclk",    "wave": "0.p..0.p..." },
+    {},
+    { "name": "data_in", "wave": "x.=.=.x.=.=", "data": ["A","B","C","D"] },
+    { "name": "data_out","wave": "x..=.=.x.=.",  "data": ["A","B","C"] }
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "Clock Enable Pattern", "tick": 0 }
+}

@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "name": "Request/Acknowledge",
+    "category": "handshake",
+    "description": "4-phase request/acknowledge handshake (level-based)",
+    "tags": ["req", "ack", "handshake", "4-phase"]
+  },
+  "signal": [
+    { "name": "clk",   "wave": "p............." },
+    {},
+    { "name": "req",   "wave": "0.1...0...1..." },
+    { "name": "ack",   "wave": "0..1..0....1.." },
+    { "name": "data",  "wave": "x.=...x...=..x", "data": ["DATA_A","DATA_B"] },
+    {},
+    { "name": "phase", "wave": "=.=.=.=...=.=.", "data": ["Idle","Req","Ack","Done","Req","Ack"] }
+  ],
+  "edge": ["a~>b Req→Ack latency"],
+  "config": { "hscale": 1 },
+  "head": { "text": "4-Phase Req/Ack Handshake", "tick": 0 }
+}

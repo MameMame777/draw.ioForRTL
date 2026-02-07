@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "name": "I2C Transaction",
+    "category": "bus",
+    "description": "I2C write transaction with Start, Address, Data, and Stop",
+    "tags": ["i2c", "serial", "bus", "scl", "sda"]
+  },
+  "signal": [
+    { "name": "SCL",  "wave": "1.0p.....0.1" },
+    { "name": "SDA",  "wave": "1.0=.=.=.=.1", "data": ["S","ADDR[6:0]+W","ACK","DATA[7:0]","ACK","P"] },
+    {},
+    { "name": "",     "wave": "",             "data": [] }
+  ],
+  "edge": ["a+b Start", "c+d Stop"],
+  "config": { "hscale": 2 },
+  "head": { "text": "I2C Write Transaction" },
+  "foot": { "text": "S=Start, P=Stop, ACK=Acknowledge" }
+}

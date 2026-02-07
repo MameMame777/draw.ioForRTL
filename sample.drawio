@@ -1,0 +1,24 @@
+<mxfile host="0rbvms8svdfa6ddmhs4il55nf4m3nqi1ldigg16pump2qvoa184o" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.109.0 Chrome/142.0.7444.265 Electron/39.3.0 Safari/537.36" version="24.7.17">
+  <diagram id="default" name="Page-1">
+    <mxGraphModel dx="1444" dy="819" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" value="てｓｗ」" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="160" y="250" width="230" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="" style="curved=1;endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="560" y="440" as="sourcePoint" />
+            <mxPoint x="740" y="120" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="610" y="440" />
+              <mxPoint x="470" y="280" />
+              <mxPoint x="560" y="390" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

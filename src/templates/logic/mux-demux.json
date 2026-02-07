@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "name": "MUX / DEMUX",
+    "category": "logic",
+    "description": "2:1 Multiplexer and 1:2 Demultiplexer timing",
+    "tags": ["mux", "demux", "multiplexer", "selector", "combinational"]
+  },
+  "signal": [
+    ["2:1 MUX",
+      { "name": "sel",  "wave": "0.1.0.1..." },
+      { "name": "in0",  "wave": "=.=.=.=...", "data": ["A0", "A1", "A2", "A3"] },
+      { "name": "in1",  "wave": "=.=.=.=...", "data": ["B0", "B1", "B2", "B3"] },
+      { "name": "out",  "wave": "=.=.=.=...", "data": ["A0", "B1", "A2", "B3"] }
+    ],
+    {},
+    ["1:2 DEMUX",
+      { "name": "sel",  "wave": "0.1.0.1..." },
+      { "name": "in",   "wave": "=.=.=.=...", "data": ["D0", "D1", "D2", "D3"] },
+      { "name": "out0", "wave": "=.x.=.x...", "data": ["D0", "D2"] },
+      { "name": "out1", "wave": "x.=.x.=...", "data": ["D1", "D3"] }
+    ]
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "MUX / DEMUX", "tick": 0 }
+}

@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "name": "T Flip-Flop",
+    "category": "logic",
+    "description": "T (Toggle) flip-flop — frequency divider by 2",
+    "tags": ["tff", "flipflop", "ff", "toggle", "divider"]
+  },
+  "signal": [
+    { "name": "clk", "wave": "p........." },
+    { "name": "T",   "wave": "0.1....0.." },
+    { "name": "Q",   "wave": "0..1010..." },
+    {},
+    { "name": "", "wave": "", "data": [] },
+    ["Divider",
+      { "name": "clk",    "wave": "p........." },
+      { "name": "T=1",    "wave": "1........." },
+      { "name": "clk/2",  "wave": "0.10101010" }
+    ]
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "T Flip-Flop", "tick": 0 }
+}

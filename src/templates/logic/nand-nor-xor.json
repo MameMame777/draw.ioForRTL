@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "name": "NAND / NOR / XOR",
+    "category": "logic",
+    "description": "NAND, NOR, XOR, XNOR timing behavior",
+    "tags": ["nand", "nor", "xor", "xnor", "gate", "combinational"]
+  },
+  "signal": [
+    { "name": "A",      "wave": "01.0.1.0.1" },
+    { "name": "B",      "wave": "0.1.0..1.." },
+    {},
+    ["Gates",
+      { "name": "A NAND B", "wave": "1..1.1.1.0" },
+      { "name": "A NOR B",  "wave": "10.0.0.0.0" },
+      { "name": "A XOR B",  "wave": "01.1.1.1.0" },
+      { "name": "A XNOR B", "wave": "10.0.0.0.1" }
+    ]
+  ],
+  "config": { "hscale": 1 },
+  "head": { "text": "NAND / NOR / XOR / XNOR Gates", "tick": 0 }
+}
