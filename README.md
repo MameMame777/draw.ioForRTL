@@ -94,7 +94,7 @@ Additionally, 8 truth table shapes (AND, OR, XOR, NAND, NOR, Half Adder, 2:1 MUX
 
 ### From .vsix file
 
-1. Download the `.vsix` file from [Releases](../../releases)
+1. Download the `.vsix` file from [Releases](https://github.com/MameMame777/DrawWave/releases)
 2. In VS Code: Extensions panel → `···` → **Install from VSIX...**
 
 Or from the command line:
@@ -106,7 +106,7 @@ code --install-extension drawwave-0.1.0.vsix
 ### Build from source
 
 ```bash
-git clone https://github.com/your-username/DrawWave.git
+git clone https://github.com/MameMame777/DrawWave.git
 cd DrawWave
 npm install
 npm run setup-drawio      # Download draw.io webapp (required)

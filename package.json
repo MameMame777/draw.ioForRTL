@@ -7,11 +7,11 @@
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/DrawWave.git"
+    "url": "https://github.com/MameMame777/DrawWave.git"
   },
-  "homepage": "https://github.com/your-username/DrawWave#readme",
+  "homepage": "https://github.com/MameMame777/DrawWave#readme",
   "bugs": {
-    "url": "https://github.com/your-username/DrawWave/issues"
+    "url": "https://github.com/MameMame777/DrawWave/issues"
   },
   "engines": {
     "vscode": "^1.85.0"
