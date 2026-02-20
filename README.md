@@ -4,6 +4,37 @@
 
 DrawWave combines [draw.io](https://www.diagrams.net/) block diagrams and [WaveDrom](https://wavedrom.com/) timing diagrams in a single VS Code extension, with HDL-driven automation for RTL design documentation.
 
+## Obsidian Plugin Support
+
+DrawWave now also includes an Obsidian plugin implementation under [obsidian-plugin](obsidian-plugin) for desktop Obsidian.
+
+### Implemented in Obsidian
+
+- `.drawio` / `.dio` editor integration via bundled draw.io webapp
+- WaveDrom code block rendering in Reading view
+- Live Preview rendering for ```wavedrom fenced blocks in editor mode
+- `.wavedrom.json` split editor + preview view
+- WaveDrom template library in draw.io sidebar
+
+### Obsidian Build / Deploy
+
+```bash
+cd obsidian-plugin
+npm install
+npm run build
+node scripts/deploy.mjs "<YOUR_VAULT_PATH>"
+```
+
+Default deploy target is `E:\Nautilus\Documents\MyObdNote` when no vault path is provided.
+
+After deploy, reload Obsidian (`Ctrl+R`).
+
+### Notes on VS Code Compatibility
+
+- VS Code extension entrypoint and command registrations remain unchanged.
+- Most Obsidian runtime changes are isolated to the `obsidian-plugin/` directory.
+- One shared file, [media/drawio-plugin-wavedrom.js](media/drawio-plugin-wavedrom.js), was hardened to wait until `Draw.loadPlugin` is available before registration. This is load-order safe and does not remove existing VS Code functionality.
+
 ## Features
 
 ![DrawWave Overview](./doc/image/functions.png)
@@ -237,6 +268,62 @@ For detailed license information, see [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICE
 5. `npm run watch` (auto-compile on save)
 6. Press **F5** to launch Extension Development Host
 7. Test with files in `test/fixtures/`
+
+## Release Procedure
+
+### VS Code (.vsix)
+
+1. Build extension output:
+
+```bash
+npm install
+npm run compile
+```
+
+2. Package extension:
+
+```bash
+npx @vscode/vsce package
+```
+
+3. Verify install locally:
+
+```bash
+code --install-extension <generated-vsix-file>
+```
+
+4. Publish release artifact on GitHub Releases (attach `.vsix`).
+
+### Obsidian Plugin Distribution
+
+1. Build Obsidian plugin bundle:
+
+```bash
+cd obsidian-plugin
+npm install
+npm run build
+```
+
+2. Deploy to local vault for smoke test:
+
+```bash
+node scripts/deploy.mjs "<YOUR_VAULT_PATH>"
+```
+
+3. Confirm in Obsidian:
+
+- Plugin loads without console errors
+- `.drawio` / `.dio` opens in Draw.io view
+- WaveDrom templates appear in draw.io sidebar
+- ```wavedrom code blocks render in Reading + Live Preview
+
+4. Package Obsidian release files from `obsidian-plugin/`:
+
+- `manifest.json`
+- `main.js`
+- `styles.css`
+
+5. Publish these artifacts with release notes.
 
 ## Acknowledgments
 

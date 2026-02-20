@@ -11,7 +11,16 @@
  * It expects WaveDrom to be available globally (loaded before this script).
  */
 
-Draw.loadPlugin(function(ui) {
+(function bootstrapDrawWavePlugin() {
+    'use strict';
+
+    function registerWhenReady() {
+        if (typeof Draw === 'undefined' || !Draw.loadPlugin) {
+            setTimeout(registerWhenReady, 50);
+            return;
+        }
+
+        Draw.loadPlugin(function(ui) {
     'use strict';
 
     // ---------------------------------------------------------------
@@ -615,4 +624,8 @@ Draw.loadPlugin(function(ui) {
     }
 
     console.log('DrawWave WaveDrom plugin loaded');
-});
+        });
+    }
+
+    registerWhenReady();
+})();
