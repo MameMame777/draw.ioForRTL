@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<!--
+  DrawWave — draw.io embed wrapper for Obsidian.
+  This file is deployed to <vault>/.obsidian/plugins/drawwave/drawio/drawio-obsidian.html
+  and loaded in an iframe by DrawioView.ts.
+
+  It mirrors the approach used in the VS Code extension:
+  1. Set window.urlParams directly (bypass index.html's parsing & redirect logic)
+  2. Use parent window directly for draw.io ↔ Obsidian postMessage
+  3. Load draw.io scripts explicitly (PreConfig → app.min → PostConfig, etc.)
+
+  Relative paths (js/*, styles/*) resolve against this file's location inside drawio/.
+-->
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles/grapheditor.css">
+    <style>
+        body { overflow: hidden; margin: 0; padding: 0; }
+        html, body { height: 100%; width: 100%; }
+    </style>
+</head>
+<body class="geEditor">
+    <div id="geInfo">
+        <div class="geBlock" style="margin:100px;text-align:center;">
+            <h2 id="geStatus">Loading draw.io...</h2>
+        </div>
+    </div>
+
+    <script>
+    // ==== Phase 1: Setup (MUST run BEFORE draw.io scripts) ====
+    (function() {
+        'use strict';
+
+        // ---- Read parameters from URL hash (set by DrawioView.ts) ----
+        var extraParams = {};
+        try {
+            if (window.location.hash && window.location.hash.length > 1) {
+                extraParams = JSON.parse(decodeURIComponent(window.location.hash.substring(1)));
+            }
+        } catch (e) {
+            console.warn('DrawWave: Failed to parse hash params:', e);
+        }
+
+        // ---- URL parameters for draw.io embed mode ----
+        window.urlParams = {
+            embed: '1',
+            proto: 'json',
+            spin: '1',
+            ui: extraParams.ui || 'kennedy',
+            libraries: '1',
+            configure: '1',
+            stealth: '1',
+            noExitBtn: '1',
+            noSaveBtn: '1',
+            local: '1',
+            lang: extraParams.lang || 'en'
+        };
+
+        // ---- Prevent Electron path detection ----
+        window.mxIsElectron = false;
+        window.DRAWIO_PUBLIC_BUILD = true;
+
+        // ---- mxscript helper (draw.io uses this to load scripts) ----
+        window.mxscript = function(src, onLoad, id, dataAppKey, noWrite, onError) {
+            var s = document.createElement('script');
+            s.setAttribute('type', 'text/javascript');
+            s.setAttribute('src', src);
+            if (id) { s.setAttribute('id', id); }
+            if (dataAppKey) { s.setAttribute('data-app-key', dataAppKey); }
+
+            if (onLoad) {
+                var r = false;
+                s.onload = s.onreadystatechange = function() {
+                    if (!r && (!this.readyState || this.readyState === 'complete')) {
+                        r = true;
+                        onLoad();
+                    }
+                };
+            }
+
+            if (onError) {
+                s.onerror = function(e) { onError('Failed to load ' + src, e); };
+            }
+
+            var t = document.getElementsByTagName('script')[0];
+            if (t && t.parentNode) {
+                t.parentNode.insertBefore(s, t);
+            } else {
+                document.head.appendChild(s);
+            }
+        };
+
+        // ---- App initialization flags ----
+        window.mxScriptsLoaded = false;
+        window.mxWinLoaded = false;
+
+        window.checkAllLoaded = function() {
+            if (window.mxScriptsLoaded && window.mxWinLoaded) {
+                try {
+                    App.main();
+                } catch (e) {
+                    console.error('DrawWave wrapper: App.main() failed:', e);
+                    var s = document.getElementById('geStatus');
+                    if (s) { s.innerHTML = 'Failed to initialize draw.io: ' + e.message; }
+                }
+            }
+        };
+
+        // ---- Global error handler ----
+        window.onerror = function(msg, url, line, col, err) {
+            console.error('DrawWave draw.io error:', msg, url, line, col, err);
+            var status = document.getElementById('geStatus');
+            if (status) {
+                status.innerHTML = 'Error: ' + msg;
+            }
+        };
+
+        // ---- Prevent EditorUi.addEmbedButtons from adding unwanted buttons ----
+        window.addEventListener('load', function() {
+            if (typeof EditorUi !== 'undefined') {
+                EditorUi.prototype.addEmbedButtons = function() {};
+            }
+        });
+    })();
+    </script>
+
+    <!-- draw.io scripts (loaded in upstream-like sequence) -->
+    <script>
+    (function() {
+        function loadAppJS() {
+            mxscript('js/app.min.js', function() {
+                window.mxScriptsLoaded = true;
+                window.checkAllLoaded();
+                mxscript('js/PostConfig.js');
+            });
+        }
+
+        mxscript('js/PreConfig.js', loadAppJS);
+    })();
+    </script>
+
+    <!-- WaveDrom browser bundle for the draw.io plugin (served from plugin root) -->
+    <script src="../wavedrom/skins/default.js"></script>
+    <script src="../wavedrom/wavedrom.min.js"></script>
+
+    <!-- DrawWave WaveDrom plugin for draw.io -->
+    <script src="../drawio-plugin-wavedrom.js"></script>
+
+    <script>
+    // ==== Phase 2: Trigger App.main() on window load ====
+    window.addEventListener('load', function() {
+        // Suppress EditorUi.addEmbedButtons if it exists
+        if (typeof EditorUi !== 'undefined') {
+            EditorUi.prototype.addEmbedButtons = function() {};
+        }
+
+        window.mxWinLoaded = true;
+        try {
+            window.checkAllLoaded();
+        } catch (e) {
+            console.error('DrawWave wrapper: checkAllLoaded() threw:', e);
+            var s = document.getElementById('geStatus');
+            if (s) { s.innerHTML = 'Initialization error: ' + e.message; }
+        }
+    });
+
+    // Catch unhandled errors
+    window.addEventListener('error', function(e) {
+        console.error('DrawWave wrapper: Uncaught error:', e.message, e.filename, e.lineno, e.error);
+    });
+
+    // Catch unhandled rejections
+    window.addEventListener('unhandledrejection', function(e) {
+        console.error('DrawWave wrapper: Unhandled rejection:', e.reason);
+    });
+    </script>
+</body>
+</html>
+
+
+
+

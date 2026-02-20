@@ -1,0 +1,29 @@
+{
+  "name": "drawwave-obsidian",
+  "version": "0.1.0",
+  "description": "DrawWave for Obsidian — draw.io + WaveDrom timing diagram integration",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "node esbuild.config.mjs production",
+    "deploy": "node esbuild.config.mjs production && node scripts/deploy.mjs"
+  },
+  "keywords": [
+    "obsidian",
+    "drawio",
+    "wavedrom",
+    "timing-diagram",
+    "waveform"
+  ],
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "esbuild": "^0.20.0",
+    "obsidian": "^1.5.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "wavedrom": "^3.5.0",
+    "onml": "^2.1.0"
+  }
+}
