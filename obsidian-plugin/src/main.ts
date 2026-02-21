@@ -169,11 +169,52 @@ export default class DrawWavePlugin extends Plugin {
 
             if (result.error) {
                 container.createDiv({ cls: 'drawwave-wavedrom-error', text: 'Error: ' + result.error });
-            } else if (result.svg) {
-                container.innerHTML = result.svg;
-            } else {
-                container.createDiv({ cls: 'drawwave-wavedrom-error', text: 'Render returned empty SVG' });
+                return;
             }
+
+            if (!result.svg) {
+                container.createDiv({ cls: 'drawwave-wavedrom-error', text: 'Render returned empty SVG' });
+                return;
+            }
+
+            // SVG content area (horizontally scrollable)
+            const svgWrapper = container.createDiv({ cls: 'drawwave-wavedrom-svg-wrapper' });
+            svgWrapper.innerHTML = result.svg;
+
+            // Store original dimensions for zoom
+            const svg = svgWrapper.querySelector('svg');
+            let origW = 0;
+            let origH = 0;
+            let zoom = 1.0;
+            if (svg) {
+                origW = parseFloat(svg.getAttribute('width') ?? String(svg.viewBox.baseVal.width));
+                origH = parseFloat(svg.getAttribute('height') ?? String(svg.viewBox.baseVal.height));
+            }
+
+            // Zoom controls bar
+            const controls = container.createDiv({ cls: 'drawwave-wavedrom-controls' });
+
+            const applyZoom = (newZoom: number) => {
+                zoom = Math.round(Math.min(3.0, Math.max(0.2, newZoom)) * 10) / 10;
+                if (svg && origW && origH) {
+                    svg.setAttribute('width', String(origW * zoom));
+                    svg.setAttribute('height', String(origH * zoom));
+                }
+                zoomLabel.textContent = Math.round(zoom * 100) + '%';
+            };
+
+            const zoomOut = controls.createEl('button', { cls: 'drawwave-zoom-btn', text: '−' });
+            zoomOut.title = 'Zoom out';
+            zoomOut.addEventListener('click', () => applyZoom(zoom - 0.2));
+
+            const zoomLabel = controls.createEl('button', { cls: 'drawwave-zoom-btn drawwave-zoom-reset', text: '100%' });
+            zoomLabel.title = 'Reset zoom';
+            zoomLabel.addEventListener('click', () => applyZoom(1.0));
+
+            const zoomIn = controls.createEl('button', { cls: 'drawwave-zoom-btn', text: '+' });
+            zoomIn.title = 'Zoom in';
+            zoomIn.addEventListener('click', () => applyZoom(zoom + 0.2));
+
         } catch (err) {
             console.error('DrawWave: Code block render exception:', err);
             container.createDiv({ cls: 'drawwave-wavedrom-error', text: 'Render exception: ' + String(err) });

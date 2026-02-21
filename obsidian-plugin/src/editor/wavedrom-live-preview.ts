@@ -98,10 +98,21 @@ class WaveDromPreviewWidget extends WidgetType {
         return this.block.source === other.block.source;
     }
 
-    /** Render SVG preview with click-to-edit overlay. */
+    /** Render SVG preview with bottom controls bar (no overlap). */
     toDOM(view: EditorView): HTMLElement {
         const wrapper = document.createElement('div');
         wrapper.className = 'drawwave-live-preview';
+
+        // ── Content area (scrollable) ──
+        const content = document.createElement('div');
+        content.className = 'drawwave-live-preview-content';
+
+        const svgWrapper = document.createElement('div');
+        svgWrapper.className = 'drawwave-live-preview-svg-wrapper';
+
+        let origW = 0;
+        let origH = 0;
+        let zoom = 1.0;
 
         // Render SVG
         const trimmed = this.block.source.trim();
@@ -112,42 +123,79 @@ class WaveDromPreviewWidget extends WidgetType {
                     const e = document.createElement('div');
                     e.className = 'drawwave-live-preview-error';
                     e.textContent = 'WaveDrom: ' + result.error;
-                    wrapper.appendChild(e);
+                    svgWrapper.appendChild(e);
                 } else if (result.svg) {
-                    wrapper.innerHTML = result.svg;
+                    svgWrapper.innerHTML = result.svg;
+                    const svg = svgWrapper.querySelector('svg');
+                    if (svg) {
+                        origW = parseFloat(svg.getAttribute('width') ?? String(svg.viewBox.baseVal.width));
+                        origH = parseFloat(svg.getAttribute('height') ?? String(svg.viewBox.baseVal.height));
+                    }
                 }
             } catch (err) {
                 const e = document.createElement('div');
                 e.className = 'drawwave-live-preview-error';
                 e.textContent = String(err);
-                wrapper.appendChild(e);
+                svgWrapper.appendChild(e);
             }
         }
 
-        // Edit overlay (shown on hover)
-        const overlay = document.createElement('div');
-        overlay.className = 'drawwave-live-preview-overlay';
-        overlay.textContent = '✏️ Click to edit';
-        wrapper.appendChild(overlay);
+        content.appendChild(svgWrapper);
+        wrapper.appendChild(content);
 
-        // Click → open modal editor
-        wrapper.addEventListener('click', (ev) => {
+        // ── Controls bar (always below the chart, no overlap) ──
+        const controls = document.createElement('div');
+        controls.className = 'drawwave-live-preview-controls';
+
+        const applyZoom = (newZoom: number) => {
+            zoom = Math.round(Math.min(3.0, Math.max(0.2, newZoom)) * 10) / 10;
+            const svg = svgWrapper.querySelector('svg');
+            if (svg && origW && origH) {
+                svg.setAttribute('width', String(origW * zoom));
+                svg.setAttribute('height', String(origH * zoom));
+            }
+            zoomLabel.textContent = Math.round(zoom * 100) + '%';
+        };
+
+        const zoomOut = document.createElement('button');
+        zoomOut.className = 'drawwave-zoom-btn';
+        zoomOut.textContent = '−';
+        zoomOut.title = 'Zoom out';
+        zoomOut.addEventListener('click', (e) => { e.stopPropagation(); applyZoom(zoom - 0.2); });
+
+        const zoomLabel = document.createElement('button');
+        zoomLabel.className = 'drawwave-zoom-btn drawwave-zoom-reset';
+        zoomLabel.textContent = '100%';
+        zoomLabel.title = 'Reset zoom';
+        zoomLabel.addEventListener('click', (e) => { e.stopPropagation(); applyZoom(1.0); });
+
+        const zoomIn = document.createElement('button');
+        zoomIn.className = 'drawwave-zoom-btn';
+        zoomIn.textContent = '+';
+        zoomIn.title = 'Zoom in';
+        zoomIn.addEventListener('click', (e) => { e.stopPropagation(); applyZoom(zoom + 0.2); });
+
+        const editBtn = document.createElement('button');
+        editBtn.className = 'drawwave-zoom-btn drawwave-edit-trigger';
+        editBtn.textContent = '✏️ Edit';
+        editBtn.title = 'Edit WaveDrom JSON';
+        editBtn.addEventListener('click', (ev) => {
             ev.preventDefault();
             ev.stopPropagation();
             if (!obsidianApp) return;
-
             const block = this.block;
             new WaveDromEditModal(obsidianApp, block.source, (newSource) => {
-                // Replace content between fences in the CM document
                 view.dispatch({
-                    changes: {
-                        from: block.contentFrom,
-                        to: block.contentTo,
-                        insert: newSource,
-                    },
+                    changes: { from: block.contentFrom, to: block.contentTo, insert: newSource },
                 });
             }).open();
         });
+
+        controls.appendChild(editBtn);
+        controls.appendChild(zoomOut);
+        controls.appendChild(zoomLabel);
+        controls.appendChild(zoomIn);
+        wrapper.appendChild(controls);
 
         return wrapper;
     }

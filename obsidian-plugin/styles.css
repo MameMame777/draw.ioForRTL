@@ -1,20 +1,46 @@
 /* DrawWave Obsidian Plugin Styles */
 
-/* ===== WaveDrom Code Block Rendering ===== */
+/* ===== WaveDrom Code Block Rendering (Reading View) ===== */
+
+/* Outer container: math-like centered block */
 .drawwave-wavedrom-block {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 16px;
-    overflow-x: auto;
+    flex-direction: column;
+    align-items: center;
+    margin: 1em 0;
+    padding: 16px 16px 8px;
+    background: var(--background-secondary);
+    border-radius: 6px;
+    border: 1px solid var(--background-modifier-border);
 }
 
-.drawwave-wavedrom-block svg {
+/* SVG content: horizontally scrollable if oversized */
+.drawwave-wavedrom-svg-wrapper {
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
     max-width: 100%;
-    height: auto;
+}
+
+.drawwave-wavedrom-svg-wrapper svg {
     background: #fff;
     border-radius: 4px;
     padding: 8px;
+    display: block;
+}
+
+/* Zoom controls (reading view) */
+.drawwave-wavedrom-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    opacity: 0.4;
+    transition: opacity 0.15s;
+}
+
+.drawwave-wavedrom-block:hover .drawwave-wavedrom-controls {
+    opacity: 1;
 }
 
 .drawwave-wavedrom-error {
@@ -162,48 +188,83 @@
 
 /* ===== WaveDrom Live Preview (inline in editor) ===== */
 .drawwave-live-preview {
-    position: relative;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 12px 16px;
+    flex-direction: column;
+    align-items: center;
     margin: 4px 0;
     background: var(--background-secondary);
     border-radius: 6px;
     border: 1px solid var(--background-modifier-border);
-    overflow-x: auto;
-    cursor: pointer;
     transition: border-color 0.15s;
+    overflow: hidden;
 }
 
 .drawwave-live-preview:hover {
     border-color: var(--interactive-accent);
 }
 
-.drawwave-live-preview svg {
+/* Scrollable content area */
+.drawwave-live-preview-content {
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
     max-width: 100%;
-    height: auto;
+    padding: 12px 16px 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.drawwave-live-preview-svg-wrapper svg {
     background: #fff;
     border-radius: 4px;
     padding: 4px;
+    display: block;
 }
 
-.drawwave-live-preview-overlay {
-    position: absolute;
-    top: 6px;
-    right: 8px;
-    font-size: 11px;
-    color: var(--text-muted);
-    background: var(--background-primary);
-    padding: 2px 8px;
-    border-radius: 4px;
-    opacity: 0;
+/* Controls bar: always visible at bottom, never overlapping chart */
+.drawwave-live-preview-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px 6px;
+    width: 100%;
+    justify-content: center;
+    opacity: 0.4;
     transition: opacity 0.15s;
-    pointer-events: none;
 }
 
-.drawwave-live-preview:hover .drawwave-live-preview-overlay {
+.drawwave-live-preview:hover .drawwave-live-preview-controls {
     opacity: 1;
+}
+
+/* Shared zoom button styles */
+.drawwave-zoom-btn {
+    background: transparent;
+    border: 1px solid var(--background-modifier-border);
+    color: var(--text-muted);
+    padding: 1px 8px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 12px;
+    line-height: 1.6;
+    min-width: 28px;
+    text-align: center;
+    transition: background 0.1s, color 0.1s;
+}
+
+.drawwave-zoom-btn:hover {
+    background: var(--interactive-accent);
+    border-color: var(--interactive-accent);
+    color: var(--text-on-accent);
+}
+
+.drawwave-zoom-reset {
+    min-width: 46px;
+    font-size: 11px;
+}
+
+.drawwave-edit-trigger {
+    margin-right: 8px;
 }
 
 .drawwave-live-preview-error {
