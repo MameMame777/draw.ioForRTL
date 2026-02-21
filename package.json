@@ -2,7 +2,7 @@
   "name": "drawwave",
   "displayName": "DrawWave",
   "description": "Integrated draw.io + WaveDrom + HDL design environment for VSCode",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "publisher": "drawwave",
   "license": "GPL-3.0",
   "repository": {

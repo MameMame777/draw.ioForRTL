@@ -1,7 +1,7 @@
 {
   "id": "drawwave",
   "name": "DrawWave",
-  "version": "0.1.0",
+  "version": "0.3.1",
   "minAppVersion": "1.0.0",
   "description": "draw.io + WaveDrom timing diagram editor for Obsidian",
   "author": "MameMame777",
