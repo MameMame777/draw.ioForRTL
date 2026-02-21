@@ -282,6 +282,39 @@
     padding: 4px 8px;
 }
 
+/* ===== WaveDrom Inline Preview (cursor inside block) ===== */
+
+/* Shown BELOW the closing fence while editing */
+.drawwave-inline-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2px 0 6px;
+    padding: 8px 12px 4px;
+    background: var(--code-background);
+    border-radius: 0 0 6px 6px;
+    border-top: 2px solid var(--interactive-accent);
+    opacity: 0.92;
+}
+
+.drawwave-inline-preview .drawwave-live-preview-scroller {
+    overflow: auto;
+    max-width: 100%;
+    max-height: 400px;
+}
+
+.drawwave-inline-preview .drawwave-live-preview-svg svg {
+    background: #fff;
+    border-radius: 4px;
+    padding: 6px;
+    display: block;
+}
+
+/* Always show controls for inline preview (user is actively editing) */
+.drawwave-inline-preview .drawwave-live-preview-controls {
+    opacity: 1;
+}
+
 
 /* ===== WaveDrom Edit Modal ===== */
 .drawwave-edit-modal {
