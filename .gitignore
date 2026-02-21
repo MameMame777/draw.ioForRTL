@@ -4,3 +4,4 @@ node_modules/
 *.vsix
 media/drawio/
 .drawio-temp/
+release/
