@@ -1,47 +1,49 @@
 /* DrawWave Obsidian Plugin Styles */
 
-/* ===== WaveDrom Code Block Rendering (Reading View) ===== */
+/* ===== WaveDrom Code Block – Reading View (math-like) ===== */
 
-/* Outer container: math-like centered block */
 .drawwave-wavedrom-block {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 1em 0;
-    padding: 16px 16px 8px;
-    background: var(--background-secondary);
+    margin: 1.2em auto;
+    padding: 12px 12px 6px;
+    background: var(--code-background);
     border-radius: 6px;
-    border: 1px solid var(--background-modifier-border);
+    border: none;
 }
 
-/* SVG content: horizontally scrollable if oversized */
+/* Scrollable SVG area with max-height */
 .drawwave-wavedrom-svg-wrapper {
+    overflow: auto;
+    max-width: 100%;
+    max-height: 500px;
     display: flex;
     justify-content: center;
-    overflow-x: auto;
-    max-width: 100%;
 }
 
 .drawwave-wavedrom-svg-wrapper svg {
     background: #fff;
     border-radius: 4px;
-    padding: 8px;
+    padding: 6px;
     display: block;
+    flex-shrink: 0;
 }
 
-/* Zoom controls (reading view) */
+/* Zoom controls – hidden until hover */
 .drawwave-wavedrom-controls {
     display: flex;
     align-items: center;
-    gap: 4px;
-    margin-top: 8px;
-    opacity: 0.4;
+    gap: 3px;
+    margin-top: 6px;
+    opacity: 0;
     transition: opacity 0.15s;
 }
 
 .drawwave-wavedrom-block:hover .drawwave-wavedrom-controls {
     opacity: 1;
 }
+
 
 .drawwave-wavedrom-error {
     color: var(--text-error);
@@ -186,50 +188,51 @@
     font-size: 13px;
 }
 
-/* ===== WaveDrom Live Preview (inline in editor) ===== */
+/* ===== WaveDrom Live Preview – Editing view (math-like) ===== */
+
+/* Outer block: math-block look */
 .drawwave-live-preview {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 4px 0;
-    background: var(--background-secondary);
+    margin: 0.6em auto;
+    padding: 10px 12px 4px;
+    background: var(--code-background);
     border-radius: 6px;
-    border: 1px solid var(--background-modifier-border);
-    transition: border-color 0.15s;
-    overflow: hidden;
+    border: none;
+    cursor: default;
 }
 
-.drawwave-live-preview:hover {
-    border-color: var(--interactive-accent);
-}
-
-/* Scrollable content area */
-.drawwave-live-preview-content {
+/* SVG scroll container: shows scrollbars when chart is wider than view */
+.drawwave-live-preview-scroller {
+    overflow: auto;
+    max-width: 100%;
+    max-height: 480px;
     display: flex;
     justify-content: center;
-    overflow-x: auto;
-    max-width: 100%;
-    padding: 12px 16px 8px;
     width: 100%;
     box-sizing: border-box;
 }
 
-.drawwave-live-preview-svg-wrapper svg {
+.drawwave-live-preview-svg {
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.drawwave-live-preview-svg svg {
     background: #fff;
     border-radius: 4px;
-    padding: 4px;
+    padding: 6px;
     display: block;
 }
 
-/* Controls bar: always visible at bottom, never overlapping chart */
+/* Controls bar – compact, below chart */
 .drawwave-live-preview-controls {
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 4px 8px 6px;
-    width: 100%;
-    justify-content: center;
-    opacity: 0.4;
+    gap: 3px;
+    padding: 4px 0 2px;
+    opacity: 0;
     transition: opacity 0.15s;
 }
 
@@ -237,17 +240,26 @@
     opacity: 1;
 }
 
-/* Shared zoom button styles */
+/* "click to edit" hint */
+.drawwave-live-preview-hint {
+    font-size: 10px;
+    color: var(--text-faint);
+    margin-left: 10px;
+    font-style: italic;
+    pointer-events: none;
+}
+
+/* Shared zoom button */
 .drawwave-zoom-btn {
     background: transparent;
     border: 1px solid var(--background-modifier-border);
     color: var(--text-muted);
-    padding: 1px 8px;
+    padding: 0 7px;
     cursor: pointer;
     border-radius: 3px;
     font-size: 12px;
-    line-height: 1.6;
-    min-width: 28px;
+    line-height: 1.7;
+    min-width: 26px;
     text-align: center;
     transition: background 0.1s, color 0.1s;
 }
@@ -259,12 +271,8 @@
 }
 
 .drawwave-zoom-reset {
-    min-width: 46px;
+    min-width: 42px;
     font-size: 11px;
-}
-
-.drawwave-edit-trigger {
-    margin-right: 8px;
 }
 
 .drawwave-live-preview-error {
@@ -273,6 +281,7 @@
     font-family: var(--font-monospace);
     padding: 4px 8px;
 }
+
 
 /* ===== WaveDrom Edit Modal ===== */
 .drawwave-edit-modal {

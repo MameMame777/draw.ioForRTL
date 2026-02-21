@@ -205,7 +205,7 @@ export default class DrawWavePlugin extends Plugin {
 
             const zoomOut = controls.createEl('button', { cls: 'drawwave-zoom-btn', text: '−' });
             zoomOut.title = 'Zoom out';
-            zoomOut.addEventListener('click', () => applyZoom(zoom - 0.2));
+            zoomOut.addEventListener('click', () => applyZoom(zoom - 0.25));
 
             const zoomLabel = controls.createEl('button', { cls: 'drawwave-zoom-btn drawwave-zoom-reset', text: '100%' });
             zoomLabel.title = 'Reset zoom';
@@ -213,7 +213,16 @@ export default class DrawWavePlugin extends Plugin {
 
             const zoomIn = controls.createEl('button', { cls: 'drawwave-zoom-btn', text: '+' });
             zoomIn.title = 'Zoom in';
-            zoomIn.addEventListener('click', () => applyZoom(zoom + 0.2));
+            zoomIn.addEventListener('click', () => applyZoom(zoom + 0.25));
+
+            // Ctrl+Wheel zoom on the SVG area
+            svgWrapper.addEventListener('wheel', (e: WheelEvent) => {
+                if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    applyZoom(zoom + (e.deltaY < 0 ? 0.1 : -0.1));
+                }
+            }, { passive: false });
 
         } catch (err) {
             console.error('DrawWave: Code block render exception:', err);

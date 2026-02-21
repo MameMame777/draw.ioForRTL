@@ -1,10 +1,11 @@
 /**
  * CodeMirror 6 editor extension for Obsidian Live Preview mode.
  *
- * Replaces ```wavedrom code blocks with rendered SVG previews.
- * Clicking a preview opens a modal dialog for editing the WaveDrom JSON.
+ * Math-like behavior:
+ *   - Cursor OUTSIDE a ```wavedrom block -> replaced with rendered SVG + zoom controls
+ *   - Cursor INSIDE  a ```wavedrom block -> decoration removed, raw JSON text is shown
  *
- * Uses a StateField (block decorations require StateField, not ViewPlugin).
+ * This matches how Obsidian handles $$...$$  math blocks in Live Preview.
  */
 
 import {
@@ -18,66 +19,56 @@ import {
 import { EditorState, StateField, StateEffect, RangeSetBuilder } from '@codemirror/state';
 import { editorLivePreviewField } from 'obsidian';
 import { renderWaveDromToSvg } from '../wavedrom-renderer';
-import { WaveDromEditModal } from './WaveDromEditModal';
 
-// ─── Module-level app reference (set by main.ts) ───
+// --- App reference (set by main.ts) ---
 import type { App } from 'obsidian';
-let obsidianApp: App | null = null;
+let _app: App | null = null;
+export function setObsidianApp(app: App): void { _app = app; }
 
-/** Called from main.ts to inject the Obsidian App reference. */
-export function setObsidianApp(app: App): void {
-    obsidianApp = app;
+// --- SVG render cache (avoid re-rendering identical source) ---
+const svgCache = new Map<string, string>();
+
+function renderCached(source: string): { svg?: string; error?: string } {
+    if (svgCache.has(source)) return { svg: svgCache.get(source)! };
+    const result = renderWaveDromToSvg(source);
+    if (!result.error && result.svg) {
+        if (svgCache.size > 80) {
+            svgCache.delete(svgCache.keys().next().value!);
+        }
+        svgCache.set(source, result.svg);
+    }
+    return result;
 }
 
-// ─── Parsed code block info ───
+// --- Parsed code block ---
 interface WaveDromBlock {
-    /** Content between the fences. */
     source: string;
-    /** Document offset: start of ```wavedrom line. */
     blockFrom: number;
-    /** Document offset: end of ``` closing line. */
     blockTo: number;
-    /** Document offset: start of first content line. */
-    contentFrom: number;
-    /** Document offset: end of last content line. */
-    contentTo: number;
 }
 
-/** Scan the document for ```wavedrom blocks. */
+/** Scan document for ```wavedrom ... ``` blocks. */
 function findWaveDromBlocks(doc: EditorState['doc']): WaveDromBlock[] {
     const blocks: WaveDromBlock[] = [];
     let inBlock = false;
     let source = '';
     let blockFrom = 0;
-    let contentFrom = 0;
-    let contentTo = 0;
 
     for (let i = 1; i <= doc.lines; i++) {
         const line = doc.line(i);
-
         if (!inBlock) {
             if (/^```wavedrom\s*$/i.test(line.text)) {
-                inBlock = true;
-                source = '';
+                inBlock   = true;
+                source    = '';
                 blockFrom = line.from;
-                contentFrom = -1;
-                contentTo = -1;
             }
         } else {
             if (/^```\s*$/.test(line.text)) {
                 inBlock = false;
                 if (source.trim()) {
-                    blocks.push({
-                        source,
-                        blockFrom,
-                        blockTo: line.to,
-                        contentFrom,
-                        contentTo,
-                    });
+                    blocks.push({ source, blockFrom, blockTo: line.to });
                 }
             } else {
-                if (contentFrom === -1) contentFrom = line.from;
-                contentTo = line.to;
                 source += (source ? '\n' : '') + line.text;
             }
         }
@@ -85,181 +76,160 @@ function findWaveDromBlocks(doc: EditorState['doc']): WaveDromBlock[] {
     return blocks;
 }
 
-// ─── Widget ───
+// --- Widget ---
 
-class WaveDromPreviewWidget extends WidgetType {
-    constructor(
-        private readonly block: WaveDromBlock,
-    ) {
-        super();
-    }
+class WaveDromWidget extends WidgetType {
+    constructor(private readonly block: WaveDromBlock) { super(); }
 
-    eq(other: WaveDromPreviewWidget): boolean {
+    eq(other: WaveDromWidget): boolean {
         return this.block.source === other.block.source;
     }
 
-    /** Render SVG preview with bottom controls bar (no overlap). */
     toDOM(view: EditorView): HTMLElement {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'drawwave-live-preview';
-
-        // ── Content area (scrollable) ──
-        const content = document.createElement('div');
-        content.className = 'drawwave-live-preview-content';
-
-        const svgWrapper = document.createElement('div');
-        svgWrapper.className = 'drawwave-live-preview-svg-wrapper';
+        const root = document.createElement('div');
+        root.className = 'drawwave-live-preview';
 
         let origW = 0;
         let origH = 0;
-        let zoom = 1.0;
+        let zoom  = 1.0;
 
-        // Render SVG
+        // --- SVG scroll container ---
+        const scroller = document.createElement('div');
+        scroller.className = 'drawwave-live-preview-scroller';
+
+        const svgWrap = document.createElement('div');
+        svgWrap.className = 'drawwave-live-preview-svg';
+
         const trimmed = this.block.source.trim();
         if (trimmed) {
-            try {
-                const result = renderWaveDromToSvg(trimmed);
-                if (result.error) {
-                    const e = document.createElement('div');
-                    e.className = 'drawwave-live-preview-error';
-                    e.textContent = 'WaveDrom: ' + result.error;
-                    svgWrapper.appendChild(e);
-                } else if (result.svg) {
-                    svgWrapper.innerHTML = result.svg;
-                    const svg = svgWrapper.querySelector('svg');
-                    if (svg) {
-                        origW = parseFloat(svg.getAttribute('width') ?? String(svg.viewBox.baseVal.width));
-                        origH = parseFloat(svg.getAttribute('height') ?? String(svg.viewBox.baseVal.height));
-                    }
+            const result = renderCached(trimmed);
+            if (result.error) {
+                svgWrap.innerHTML = '<span class="drawwave-live-preview-error">WaveDrom: ' + result.error + '</span>';
+            } else if (result.svg) {
+                svgWrap.innerHTML = result.svg;
+                const svg = svgWrap.querySelector('svg');
+                if (svg) {
+                    origW = parseFloat(svg.getAttribute('width') ?? String(svg.viewBox.baseVal.width));
+                    origH = parseFloat(svg.getAttribute('height') ?? String(svg.viewBox.baseVal.height));
                 }
-            } catch (err) {
-                const e = document.createElement('div');
-                e.className = 'drawwave-live-preview-error';
-                e.textContent = String(err);
-                svgWrapper.appendChild(e);
             }
         }
 
-        content.appendChild(svgWrapper);
-        wrapper.appendChild(content);
+        scroller.appendChild(svgWrap);
+        root.appendChild(scroller);
 
-        // ── Controls bar (always below the chart, no overlap) ──
+        // --- Zoom controls ---
         const controls = document.createElement('div');
         controls.className = 'drawwave-live-preview-controls';
 
         const applyZoom = (newZoom: number) => {
-            zoom = Math.round(Math.min(3.0, Math.max(0.2, newZoom)) * 10) / 10;
-            const svg = svgWrapper.querySelector('svg');
+            zoom = Math.round(Math.min(4.0, Math.max(0.2, newZoom)) * 10) / 10;
+            const svg = svgWrap.querySelector('svg');
             if (svg && origW && origH) {
-                svg.setAttribute('width', String(origW * zoom));
-                svg.setAttribute('height', String(origH * zoom));
+                svg.setAttribute('width',  String(Math.round(origW * zoom)));
+                svg.setAttribute('height', String(Math.round(origH * zoom)));
             }
             zoomLabel.textContent = Math.round(zoom * 100) + '%';
         };
 
-        const zoomOut = document.createElement('button');
-        zoomOut.className = 'drawwave-zoom-btn';
-        zoomOut.textContent = '−';
-        zoomOut.title = 'Zoom out';
-        zoomOut.addEventListener('click', (e) => { e.stopPropagation(); applyZoom(zoom - 0.2); });
+        const mkBtn = (text: string, title: string, cb: () => void) => {
+            const btn = document.createElement('button');
+            btn.className = 'drawwave-zoom-btn';
+            btn.textContent = text;
+            btn.title = title;
+            btn.addEventListener('click', (e) => { e.stopPropagation(); cb(); });
+            return btn;
+        };
 
-        const zoomLabel = document.createElement('button');
+        const zoomOut   = mkBtn('−', 'Zoom out (-25%)', () => applyZoom(zoom - 0.25));
+        const zoomLabel = mkBtn('100%', 'Reset zoom',    () => applyZoom(1.0));
         zoomLabel.className = 'drawwave-zoom-btn drawwave-zoom-reset';
-        zoomLabel.textContent = '100%';
-        zoomLabel.title = 'Reset zoom';
-        zoomLabel.addEventListener('click', (e) => { e.stopPropagation(); applyZoom(1.0); });
+        const zoomIn    = mkBtn('+', 'Zoom in (+25%)',  () => applyZoom(zoom + 0.25));
 
-        const zoomIn = document.createElement('button');
-        zoomIn.className = 'drawwave-zoom-btn';
-        zoomIn.textContent = '+';
-        zoomIn.title = 'Zoom in';
-        zoomIn.addEventListener('click', (e) => { e.stopPropagation(); applyZoom(zoom + 0.2); });
+        const editHint = document.createElement('span');
+        editHint.className = 'drawwave-live-preview-hint';
+        editHint.textContent = 'click to edit';
 
-        const editBtn = document.createElement('button');
-        editBtn.className = 'drawwave-zoom-btn drawwave-edit-trigger';
-        editBtn.textContent = '✏️ Edit';
-        editBtn.title = 'Edit WaveDrom JSON';
-        editBtn.addEventListener('click', (ev) => {
-            ev.preventDefault();
-            ev.stopPropagation();
-            if (!obsidianApp) return;
-            const block = this.block;
-            new WaveDromEditModal(obsidianApp, block.source, (newSource) => {
-                view.dispatch({
-                    changes: { from: block.contentFrom, to: block.contentTo, insert: newSource },
-                });
-            }).open();
+        controls.append(zoomOut, zoomLabel, zoomIn, editHint);
+        root.appendChild(controls);
+
+        // --- Ctrl+Wheel to zoom, native scroll otherwise ---
+        scroller.addEventListener('wheel', (e: WheelEvent) => {
+            if (e.ctrlKey || e.metaKey) {
+                e.preventDefault();
+                e.stopPropagation();
+                applyZoom(zoom + (e.deltaY < 0 ? 0.1 : -0.1));
+            }
+        }, { passive: false });
+
+        // --- Click body -> move cursor into block -> raw text shown ---
+        root.addEventListener('click', (e) => {
+            const target = e.target as HTMLElement;
+            if (target.closest('button')) return;
+            e.preventDefault();
+            e.stopPropagation();
+            view.dispatch({
+                selection: { anchor: this.block.blockFrom + 1 },
+                scrollIntoView: true,
+            });
+            view.focus();
         });
 
-        controls.appendChild(editBtn);
-        controls.appendChild(zoomOut);
-        controls.appendChild(zoomLabel);
-        controls.appendChild(zoomIn);
-        wrapper.appendChild(controls);
-
-        return wrapper;
+        return root;
     }
 
-    get estimatedHeight(): number {
-        return 120;
-    }
-
-    ignoreEvent(): boolean {
-        // We handle clicks ourselves
-        return false;
+    ignoreEvent(e: Event): boolean {
+        return (e.target as HTMLElement).closest?.('button') !== null;
     }
 }
 
-// ─── Decorations ───
+// --- Build decorations (cursor-aware) ---
 
 function buildDecorations(state: EditorState): DecorationSet {
-    // Only activate in Live Preview mode
     try {
-        if (!state.field(editorLivePreviewField)) {
-            return Decoration.none;
-        }
+        if (!state.field(editorLivePreviewField)) return Decoration.none;
     } catch {
-        // Field not available — skip
         return Decoration.none;
     }
 
-    const blocks = findWaveDromBlocks(state.doc);
+    const blocks  = findWaveDromBlocks(state.doc);
     const builder = new RangeSetBuilder<Decoration>();
+    const cursor  = state.selection.main;
 
     for (const block of blocks) {
-        const deco = Decoration.replace({
-            widget: new WaveDromPreviewWidget(block),
-        });
-        builder.add(block.blockFrom, block.blockTo, deco);
+        // If cursor is anywhere inside this block, skip -> show raw JSON
+        if (cursor.from <= block.blockTo && cursor.to >= block.blockFrom) continue;
+
+        builder.add(
+            block.blockFrom,
+            block.blockTo,
+            Decoration.replace({ widget: new WaveDromWidget(block) }),
+        );
     }
 
     return builder.finish();
 }
 
-// ─── State management ───
+// --- State field ---
 
 const rebuildEffect = StateEffect.define<null>();
 
 const wavedromDecoField = StateField.define<DecorationSet>({
-    create(state) {
-        return buildDecorations(state);
-    },
+    create: (state) => buildDecorations(state),
     update(decos, tr) {
         for (const e of tr.effects) {
-            if (e.is(rebuildEffect)) {
-                return buildDecorations(tr.state);
-            }
+            if (e.is(rebuildEffect)) return buildDecorations(tr.state);
         }
-        if (tr.docChanged) {
-            // Map stale positions; real rebuild comes after debounce
-            return decos.map(tr.changes);
-        }
+        // Rebuild immediately when cursor moves (may enter/leave a block)
+        if (tr.selection) return buildDecorations(tr.state);
+        // Map positions on doc change; debounce plugin triggers full re-render
+        if (tr.docChanged) return decos.map(tr.changes);
         return decos;
     },
-    provide(field) {
-        return EditorView.decorations.from(field);
-    },
+    provide: (f) => EditorView.decorations.from(f),
 });
+
+// --- Debounce plugin: full re-render after typing stops ---
 
 const wavedromDebouncePlugin = ViewPlugin.fromClass(
     class {
@@ -270,7 +240,7 @@ const wavedromDebouncePlugin = ViewPlugin.fromClass(
                 if (this.timer) clearTimeout(this.timer);
                 this.timer = setTimeout(() => {
                     update.view.dispatch({ effects: rebuildEffect.of(null) });
-                }, 400);
+                }, 500);
             }
         }
 
@@ -279,7 +249,5 @@ const wavedromDebouncePlugin = ViewPlugin.fromClass(
         }
     }
 );
-
-// ─── Export ───
 
 export const wavedromLivePreviewPlugin = [wavedromDecoField, wavedromDebouncePlugin];
