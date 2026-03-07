@@ -1,6 +1,6 @@
 {
   "name": "drawwave-obsidian",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "DrawWave for Obsidian — draw.io + WaveDrom timing diagram integration",
   "main": "main.js",
   "scripts": {
