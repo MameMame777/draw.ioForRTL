@@ -15,7 +15,7 @@ const pluginRoot = path.resolve(__dirname, '..');
 const projectRoot = path.resolve(pluginRoot, '..');
 
 // Target vault
-const vaultPath = process.argv[2] || 'E:\\Nautilus\\Documents\\MyObdNote';
+const vaultPath = process.argv[2] || 'E:\\Nautilus\\Documents\\SynologyDrive\\MyObdNote';
 const pluginDir = path.join(vaultPath, '.obsidian', 'plugins', 'drawwave');
 
 // Ensure plugin directory exists
@@ -58,14 +58,14 @@ if (fs.existsSync(pjSrc)) {
     console.warn(`  ✗ ${pluginJsFile} not found`);
 }
 
-// 4. Copy templates
-const templatesSrc = path.join(pluginRoot, 'dist', 'templates');
+// 4. Copy templates (from src/templates in project root)
+const templatesSrc = path.join(projectRoot, 'src', 'templates');
 const templatesDst = path.join(pluginDir, 'templates');
 if (fs.existsSync(templatesSrc)) {
     copyDirRecursive(templatesSrc, templatesDst);
     console.log('  ✓ templates/');
 } else {
-    console.warn('  ✗ dist/templates/ not found');
+    console.warn('  ✗ src/templates/ not found');
 }
 
 // 5. Copy draw.io webapp (large — skip if already exists and same size)
