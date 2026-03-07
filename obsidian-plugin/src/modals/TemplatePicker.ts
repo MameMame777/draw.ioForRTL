@@ -50,7 +50,11 @@ export class TemplatePicker extends FuzzySuggestModal<TemplateRegistryEntry> {
 
             const templatePath = nodePath.join(basePath, pluginDir, 'templates', item.relativePath);
             const content = nodeFs.readFileSync(templatePath, 'utf-8');
-            this.onSelect(content);
+            // Strip non-WaveDrom 'meta' key before passing to caller
+            const obj = JSON.parse(content) as Record<string, unknown>;
+            delete obj.meta;
+            const cleanJson = JSON.stringify(obj, null, 2);
+            this.onSelect(cleanJson);
         } catch (err) {
             new Notice(`Failed to load template: ${item.meta.name}`);
             console.error('DrawWave template load error:', err);

@@ -94,8 +94,18 @@ export default class DrawWavePlugin extends Plugin {
         this.drawioServerReady = this.startDrawioServer();
 
         // ===== Ribbon icon =====
-        this.addRibbonIcon('activity', 'DrawWave: New WaveDrom', () => {
-            this.createNewWaveDromFile();
+        // If a Markdown file is active, open TemplatePicker and insert inline;
+        // otherwise create a new standalone .wavedrom.json file.
+        this.addRibbonIcon('activity', 'DrawWave: WaveDrom', () => {
+            const activeFile = this.app.workspace.getActiveFile();
+            const editor = this.app.workspace.activeEditor?.editor;
+            if (activeFile?.extension === 'md' && editor) {
+                new TemplatePicker(this.app, this, (json) => {
+                    editor.replaceSelection('```wavedrom\n' + json + '\n```\n');
+                }).open();
+            } else {
+                this.createNewWaveDromFile();
+            }
         });
     }
 
